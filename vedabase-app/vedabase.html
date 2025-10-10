@@ -484,7 +484,11 @@
                         isLoading = false;
 
                         // Show Add Bookmark button when content is loaded
-                        addBookmarkBtn.style.display = 'block';
+                        console.log('Showing bookmark button, element:', addBookmarkBtn);
+                        if (addBookmarkBtn) {
+                            addBookmarkBtn.style.display = 'inline-block';
+                            console.log('Bookmark button display set to inline-block');
+                        }
 
                         // If there's an active search, apply it to the newly loaded page
                         if (window.currentSearchQuery) {
@@ -518,7 +522,11 @@
                 isLoading = false;
 
                 // Show Add Bookmark button when initial content is loaded
-                addBookmarkBtn.style.display = 'block';
+                console.log('Initial load: Showing bookmark button, element:', addBookmarkBtn);
+                if (addBookmarkBtn) {
+                    addBookmarkBtn.style.display = 'inline-block';
+                    console.log('Initial load: Bookmark button display set to inline-block');
+                }
 
                 // If there's an active search, apply it to the initial page
                 if (window.currentSearchQuery) {
