@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vedabase - Original | Desktop App for Srila Prabhupada's Works</title>
-    <meta name="description" content="Desktop application for reading and studying the works by A. C. Bhaktivedanta Swami Prabhupada. Features full-text search, cross-references, notes, and dark mode.">
+    <meta name="description" content="Desktop application featuring original, unedited editions of Srila Prabhupada's works. Bhagavad-gita As It Is (1972 original), Srimad-Bhagavatam, and more - unchanged and unabridged as originally published.">
     <style>
         * {
             margin: 0;
@@ -16,7 +16,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #ec4899 100%);
             min-height: 100vh;
         }
 
@@ -39,31 +39,30 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .subtitle {
-            font-size: 1.3em;
-            opacity: 0.95;
-            margin-bottom: 30px;
-        }
-
         .tagline {
-            font-size: 1.1em;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto 40px;
+            font-size: 1.4em;
+            opacity: 0.95;
+            max-width: 900px;
+            margin: 0 auto 30px;
+            font-weight: 500;
+            line-height: 1.5;
         }
 
         .download-section {
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             padding: 40px;
             margin: 40px auto;
             max-width: 900px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .download-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
             color: white;
             padding: 18px 40px;
             border-radius: 30px;
@@ -72,7 +71,7 @@
             font-weight: 600;
             margin: 10px;
             transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
         }
 
         .download-btn:hover {
@@ -176,6 +175,31 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
+        .video-showcase {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 0 auto 40px;
+            max-width: 900px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .video-showcase h2 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        .video-showcase video {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -211,27 +235,34 @@
 <body>
     <header>
         <h1>Vedabase - Original</h1>
-        <p class="subtitle">Desktop App for Srila Prabhupada's Works</p>
-        <p class="tagline">A powerful desktop application for reading and studying the works by A. C. Bhaktivedanta Swami Prabhupada</p>
+        <p class="tagline">A powerful desktop application for reading and studying the original, unchanged, unabridged works by A. C. Bhaktivedanta Swami Prabhupada</p>
     </header>
 
     <div class="container">
+        <div class="video-showcase">
+            <video controls autoplay muted loop playsinline>
+                <source src="vedabase-showcase-new.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
         <div class="download-section">
             <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">Download for macOS</h2>
             <div style="text-align: center;">
-                <a href="#" class="download-btn">📥 Download Vedabase.app</a>
-                <p class="version">Version 1.1.0 • macOS 10.13+ • 28 MB</p>
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/Vedabase/Vedabase.zip" class="download-btn">📥 Download Vedabase.app</a>
+                <p class="version">Version 1.3.0 • macOS 10.13+ • 28 MB</p>
             </div>
         </div>
 
         <div class="gatekeeper-notice">
             <h3>🔒 macOS Gatekeeper Notice</h3>
             <p style="margin-bottom: 15px;">Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.</p>
-            <p><strong>To open the app:</strong></p>
+            <p><strong>To bypass Gatekeeper:</strong></p>
             <ol>
-                <li>Right-click (or Control-click) on <strong>Vedabase.app</strong></li>
-                <li>Select <strong>"Open"</strong> from the menu</li>
-                <li>Click <strong>"Open"</strong> in the dialog that appears</li>
+                <li>Try to open the app (it will be blocked)</li>
+                <li>Open <strong>System Settings → Privacy & Security</strong></li>
+                <li>Scroll down and click <strong>"Open Anyway"</strong></li>
+                <li>Confirm by clicking <strong>"Open"</strong></li>
             </ol>
             <p style="margin-top: 15px;"><em>You only need to do this once. After the first launch, you can open it normally.</em></p>
         </div>
@@ -312,8 +343,8 @@
     </div>
 
     <footer>
-        <p>Original text: <a href="https://vaishnavauploads.pages.dev/bg">Vaishnava Uploads</a></p>
-        <p style="margin-top: 10px;">Author: A. C. Bhaktivedanta Swami Prabhupada</p>
+        <p style="font-weight: 600; font-size: 1em;">All texts are original editions, faithfully preserved from Srila Prabhupada's published works</p>
+        <p style="margin-top: 15px;">Sponsored by <a href="https://www.vedicvault.org/projects">Vedic Vault</a></p>
         <p style="margin-top: 20px; font-size: 0.9em;">Built with ❤️ using Tauri</p>
     </footer>
 </body>

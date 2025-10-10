@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vedabase - Complete Collection</title>
+    <title>Vedabase - Original Books</title>
     <link href="https://fonts.googleapis.com/css2?family=Sanskrit+Text:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -251,9 +251,12 @@
     <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4">
-            <h1 class="text-3xl font-sanskrit text-orange-600 text-center">
-                Vedabase - Complete Collection
-            </h1>
+            <div class="flex items-center justify-center gap-3">
+                <h1 class="text-3xl font-sanskrit text-orange-600">
+                    Vedabase - Original Books
+                </h1>
+                <span class="text-xs font-mono text-gray-400 px-2 py-1 rounded-full border border-gray-200" style="font-size: 0.65rem; opacity: 0.6;">v1.3.0</span>
+            </div>
             <!-- Search Bar -->
             <div class="mt-4">
                 <div class="flex gap-2">
@@ -344,9 +347,22 @@
     <div id="stats-panel" class="hidden"></div>
 
     <!-- Floating bookmark button (appears when reading) -->
-    <button id="add-bookmark-btn" class="hidden" style="position: fixed; bottom: 120px; right: 32px; padding: 12px 16px; background: #7c3aed; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'" title="Add bookmark at current location">
+    <button id="add-bookmark-btn" style="display: none; position: fixed; bottom: 120px; right: 32px; padding: 12px 16px; background: #7c3aed; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'" title="Add bookmark at current location">
         🔖 Add
     </button>
+
+    <!-- Custom Note Dialog -->
+    <div id="note-dialog" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 90%;">
+            <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 20px;">Add Note to Bookmark</h3>
+            <p style="margin: 0 0 15px 0; color: #6b7280; font-size: 14px;">Add an optional note to help you remember why you bookmarked this location.</p>
+            <textarea id="note-input" placeholder="Enter your note here (optional)..." style="width: 100%; min-height: 100px; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; margin-bottom: 20px;"></textarea>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="note-cancel-btn" style="padding: 10px 20px; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Cancel</button>
+                <button id="note-save-btn" style="padding: 10px 20px; background: #7c3aed; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Save Bookmark</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Navigation Buttons (fixed position) -->
     <button id="prev-result-btn" class="hidden" style="position: fixed; bottom: 32px; right: 200px; padding: 12px 24px; background: #2563eb; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">
@@ -483,6 +499,11 @@
                         contentFrame.classList.remove('hidden');
                         isLoading = false;
 
+                        // Show Add Bookmark button when content is loaded
+                        if (addBookmarkBtn) {
+                            addBookmarkBtn.style.display = 'inline-block';
+                            addBookmarkBtn.style.visibility = 'visible';
+                        }
 
                         // If there's an active search, apply it to the newly loaded page
                         if (window.currentSearchQuery) {
@@ -504,23 +525,14 @@
             });
         });
 
-        // Initial load handler - also apply search if exists
-        window.addEventListener('load', () => {
-            const originalOnload = contentFrame.onload;
-            contentFrame.onload = function() {
-                // Call original if it exists
-                if (originalOnload) originalOnload.call(this);
-
-                loading.classList.add('hidden');
-                contentFrame.classList.remove('hidden');
-                isLoading = false;
-
-
-                // If there's an active search, apply it to the initial page
-                if (window.currentSearchQuery) {
-                    applySearchToLoadedFrame();
-                }
-            };
+        // Show button on initial iframe load
+        contentFrame.addEventListener('load', function initialLoad() {
+            if (addBookmarkBtn) {
+                addBookmarkBtn.style.display = 'inline-block';
+                addBookmarkBtn.style.visibility = 'visible';
+            }
+            // Remove this listener after first load
+            contentFrame.removeEventListener('load', initialLoad);
         });
 
         // Aggressive preloading - start preloading all pages after initial load
@@ -1282,8 +1294,11 @@
         }
 
         function saveBookmark(bookmark) {
+            alert('DEBUG saveBookmark: Function called with bookmark: ' + JSON.stringify(bookmark));
             try {
+                alert('DEBUG saveBookmark: Getting existing bookmarks...');
                 let bookmarks = getBookmarks();
+                alert('DEBUG saveBookmark: Got ' + bookmarks.length + ' existing bookmarks');
 
                 // Check if bookmark already exists at this location
                 const exists = bookmarks.some(b =>
@@ -1296,13 +1311,18 @@
                     return false;
                 }
 
+                alert('DEBUG saveBookmark: Adding bookmark to array...');
                 bookmarks.unshift(bookmark);
+
+                alert('DEBUG saveBookmark: Saving to localStorage...');
                 localStorage.setItem('vedabaseBookmarks', JSON.stringify(bookmarks));
+
+                alert('DEBUG saveBookmark: Bookmark saved successfully!');
                 console.log('✓ Bookmark saved');
                 return true;
             } catch (e) {
                 console.error('Error saving bookmark:', e);
-                alert('Failed to save bookmark');
+                alert('DEBUG saveBookmark ERROR: ' + e.message + '\nStack: ' + e.stack);
                 return false;
             }
         }
@@ -1324,8 +1344,9 @@
 
             bookmarksPanel.style.maxHeight = '60vh';
             bookmarksPanel.style.overflowY = 'auto';
-            bookmarksPanel.style.background = 'white';
-            bookmarksPanel.style.border = '1px solid #e5e7eb';
+            bookmarksPanel.style.background = document.body.classList.contains('dark-mode') ? '#000000' : 'white';
+            bookmarksPanel.style.color = document.body.classList.contains('dark-mode') ? '#ffffff' : '#000000';
+            bookmarksPanel.style.border = document.body.classList.contains('dark-mode') ? '1px solid #2a2a2a' : '1px solid #e5e7eb';
             bookmarksPanel.style.borderRadius = '8px';
             bookmarksPanel.style.margin = '1rem';
 
@@ -1405,11 +1426,6 @@
 
         // Show bookmarks when button clicked
         bookmarksBtn.addEventListener('click', showBookmarks);
-
-        // Show "Add Bookmark" button when content is visible
-        window.addEventListener('load', () => {
-            addBookmarkBtn.classList.remove('hidden');
-        });
 
         // Reading Progress Tracker
         function saveReadingProgress() {
@@ -1556,64 +1572,70 @@
 
             statsPanel.style.maxHeight = '60vh';
             statsPanel.style.overflowY = 'auto';
-            statsPanel.style.background = 'white';
-            statsPanel.style.border = '1px solid #e5e7eb';
+            statsPanel.style.background = document.body.classList.contains('dark-mode') ? '#000000' : 'white';
+            statsPanel.style.color = document.body.classList.contains('dark-mode') ? '#ffffff' : '#000000';
+            statsPanel.style.border = document.body.classList.contains('dark-mode') ? '1px solid #2a2a2a' : '1px solid #e5e7eb';
             statsPanel.style.borderRadius = '8px';
             statsPanel.style.margin = '1rem';
 
+            const isDark = document.body.classList.contains('dark-mode');
+            const cardBg = isDark ? '#1a1a1a' : 'rgb(249 250 251)';
+            const textColor = isDark ? '#ffffff' : '#000000';
+            const subTextColor = isDark ? '#a0a0a0' : 'rgb(75 85 99)';
+
             const html = `
-                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 class="text-lg font-semibold">📊 Reading Statistics</h3>
+                <div class="p-4 border-b flex justify-between items-center" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                    <h3 class="text-lg font-semibold" style="color: ${textColor}">📊 Reading Statistics</h3>
                     <button onclick="closeStats()" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
                         Close
                     </button>
                 </div>
                 <div class="p-6 space-y-6">
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 bg-blue-50 rounded-lg">
-                            <div class="text-3xl font-bold text-blue-600">${daysSinceFirst}</div>
-                            <div class="text-sm text-gray-600">Days since first use</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#1a1a3a' : 'rgb(239 246 255)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#60a5fa' : 'rgb(37 99 235)'}">${daysSinceFirst}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Days since first use</div>
                         </div>
-                        <div class="p-4 bg-purple-50 rounded-lg">
-                            <div class="text-3xl font-bold text-purple-600">${stats.totalSearches}</div>
-                            <div class="text-sm text-gray-600">Total searches</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#2a1a3a' : 'rgb(250 245 255)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#a78bfa' : 'rgb(147 51 234)'}">${stats.totalSearches}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Total searches</div>
                         </div>
-                        <div class="p-4 bg-green-50 rounded-lg">
-                            <div class="text-3xl font-bold text-green-600">${bookmarks.length}</div>
-                            <div class="text-sm text-gray-600">Bookmarks saved</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#1a2a1a' : 'rgb(240 253 244)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#4ade80' : 'rgb(22 163 74)'}">${bookmarks.length}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Bookmarks saved</div>
                         </div>
-                        <div class="p-4 bg-orange-50 rounded-lg">
-                            <div class="text-3xl font-bold text-orange-600">${Object.keys(stats.booksVisited).length}</div>
-                            <div class="text-sm text-gray-600">Books explored</div>
-                        </div>
-                    </div>
-
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold mb-2">📚 Most Visited Book</h4>
-                        <div class="p-3 bg-gray-50 rounded">
-                            <div class="font-medium">${mostVisited}</div>
-                            <div class="text-sm text-gray-600">${maxVisits} visits</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#2a1a0a' : 'rgb(255 247 237)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#fb923c' : 'rgb(234 88 12)'}">${Object.keys(stats.booksVisited).length}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Books explored</div>
                         </div>
                     </div>
 
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold mb-2">🔍 Recent Searches</h4>
+                    <div class="border-t pt-4" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                        <h4 class="font-semibold mb-2" style="color: ${textColor}">📚 Most Visited Book</h4>
+                        <div class="p-3 rounded" style="background: ${cardBg}">
+                            <div class="font-medium" style="color: ${textColor}">${mostVisited}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">${maxVisits} visits</div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                        <h4 class="font-semibold mb-2" style="color: ${textColor}">🔍 Recent Searches</h4>
                         <div class="space-y-2">
                             ${history.slice(0, 5).map(query => `
-                                <div class="p-2 bg-gray-50 rounded text-sm">${query}</div>
-                            `).join('') || '<div class="text-sm text-gray-500">No searches yet</div>'}
+                                <div class="p-2 rounded text-sm" style="background: ${cardBg}; color: ${textColor}">${query}</div>
+                            `).join('') || `<div class="text-sm" style="color: ${subTextColor}">No searches yet</div>`}
                         </div>
                     </div>
 
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold mb-2">📖 Book Visit Summary</h4>
+                    <div class="border-t pt-4" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                        <h4 class="font-semibold mb-2" style="color: ${textColor}">📖 Book Visit Summary</h4>
                         <div class="space-y-2">
                             ${Object.entries(stats.booksVisited).map(([path, data]) => `
-                                <div class="flex justify-between items-center p-2 bg-gray-50 rounded text-sm">
-                                    <span>${bookNames[path] || path}</span>
-                                    <span class="text-gray-600">${data.visits} visits</span>
+                                <div class="flex justify-between items-center p-2 rounded text-sm" style="background: ${cardBg}">
+                                    <span style="color: ${textColor}">${bookNames[path] || path}</span>
+                                    <span style="color: ${subTextColor}">${data.visits} visits</span>
                                 </div>
-                            `).join('') || '<div class="text-sm text-gray-500">No visits tracked yet</div>'}
+                            `).join('') || `<div class="text-sm" style="color: ${subTextColor}">No visits tracked yet</div>`}
                         </div>
                     </div>
                 </div>
@@ -1657,53 +1679,127 @@
         statsBtn.addEventListener('click', showStats);
 
         // Add bookmark at current location
-        addBookmarkBtn.addEventListener('click', () => {
-            try {
-                const iframeDoc = contentFrame.contentWindow.document;
+        console.log('DEBUG: addBookmarkBtn =', addBookmarkBtn);
+        if (addBookmarkBtn) {
+            console.log('DEBUG: Attaching click listener to bookmark button');
+            addBookmarkBtn.addEventListener('click', () => {
+                console.log('DEBUG: Bookmark button clicked!');
+                try {
+                    console.log('DEBUG: contentFrame =', contentFrame);
+                    console.log('DEBUG: Trying to access iframe document...');
+                    const iframeDoc = contentFrame.contentWindow.document;
+                    console.log('DEBUG: Got iframe document', iframeDoc);
 
-                // Get current scroll position and find nearest heading
-                const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
-                const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
+                    // Get current scroll position and find nearest heading
+                    const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+                    console.log('DEBUG: Scroll position:', scrollY);
 
-                let nearestHeading = null;
-                let minDistance = Infinity;
+                    const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
+                    console.log('DEBUG: Found', headings.length, 'headings');
 
-                headings.forEach(heading => {
-                    const rect = heading.getBoundingClientRect();
-                    const headingY = rect.top + scrollY;
-                    const distance = Math.abs(headingY - scrollY);
+                    let nearestHeading = null;
+                    let minDistance = Infinity;
 
-                    if (distance < minDistance && headingY <= scrollY + 200) {
-                        minDistance = distance;
-                        nearestHeading = heading;
+                    headings.forEach(heading => {
+                        const rect = heading.getBoundingClientRect();
+                        const headingY = rect.top + scrollY;
+                        const distance = Math.abs(headingY - scrollY);
+
+                        if (distance < minDistance && headingY <= scrollY + 200) {
+                            minDistance = distance;
+                            nearestHeading = heading;
+                        }
+                    });
+
+                    if (!nearestHeading) {
+                        console.log('DEBUG: No nearest heading found!');
+                        alert('Could not determine current location. Please scroll to a section heading.');
+                        return;
                     }
-                });
 
-                if (!nearestHeading) {
-                    alert('Could not determine current location. Please scroll to a section heading.');
-                    return;
+                    console.log('DEBUG: Found nearest heading:', nearestHeading.textContent.trim());
+
+                    // Show custom note dialog
+                    const noteDialog = document.getElementById('note-dialog');
+                    const noteInput = document.getElementById('note-input');
+                    const noteSaveBtn = document.getElementById('note-save-btn');
+                    const noteCancelBtn = document.getElementById('note-cancel-btn');
+
+                    // Clear previous note
+                    noteInput.value = '';
+
+                    // Show dialog
+                    noteDialog.style.display = 'flex';
+                    noteInput.focus();
+
+                    // Handle save button click
+                    const handleSave = () => {
+                        const note = noteInput.value.trim();
+                        console.log('DEBUG: User entered note:', note);
+
+                        const bookmark = {
+                            source: bookNames[currentSrc],
+                            sourcePath: currentSrc,
+                            headingId: nearestHeading.id,
+                            title: nearestHeading.textContent.trim(),
+                            timestamp: Date.now(),
+                            note: note
+                        };
+
+                        console.log('DEBUG: Bookmark object created:', bookmark);
+                        const saveResult = saveBookmark(bookmark);
+                        console.log('DEBUG: saveBookmark returned:', saveResult);
+
+                        if (saveResult) {
+                            // Show success message
+                            const successMsg = document.createElement('div');
+                            successMsg.textContent = '✓ Bookmark saved!';
+                            successMsg.style.cssText = 'position: fixed; top: 80px; right: 32px; background: #10b981; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1001; font-weight: 600; animation: slideIn 0.3s ease;';
+                            document.body.appendChild(successMsg);
+                            setTimeout(() => {
+                                successMsg.style.animation = 'slideOut 0.3s ease';
+                                setTimeout(() => successMsg.remove(), 300);
+                            }, 2000);
+                        }
+
+                        // Hide dialog and cleanup
+                        noteDialog.style.display = 'none';
+                        noteSaveBtn.removeEventListener('click', handleSave);
+                        noteCancelBtn.removeEventListener('click', handleCancel);
+                    };
+
+                    // Handle cancel button click
+                    const handleCancel = () => {
+                        console.log('DEBUG: User cancelled bookmark');
+                        noteDialog.style.display = 'none';
+                        noteSaveBtn.removeEventListener('click', handleSave);
+                        noteCancelBtn.removeEventListener('click', handleCancel);
+                    };
+
+                    noteSaveBtn.addEventListener('click', handleSave);
+                    noteCancelBtn.addEventListener('click', handleCancel);
+
+                    // Handle Enter key to save
+                    const handleKeyPress = (e) => {
+                        if (e.key === 'Enter' && e.ctrlKey) {
+                            handleSave();
+                            noteInput.removeEventListener('keypress', handleKeyPress);
+                        } else if (e.key === 'Escape') {
+                            handleCancel();
+                            noteInput.removeEventListener('keypress', handleKeyPress);
+                        }
+                    };
+                    noteInput.addEventListener('keypress', handleKeyPress);
+                } catch (e) {
+                    console.error('DEBUG: Error adding bookmark:', e);
+                    console.error('DEBUG: Error message:', e.message);
+                    console.error('DEBUG: Error stack:', e.stack);
+                    alert('DEBUG ERROR: ' + e.message);
                 }
-
-                const note = prompt('Add a note to this bookmark (optional):');
-                if (note === null) return; // User cancelled
-
-                const bookmark = {
-                    source: bookNames[currentSrc],
-                    sourcePath: currentSrc,
-                    headingId: nearestHeading.id,
-                    title: nearestHeading.textContent.trim(),
-                    timestamp: Date.now(),
-                    note: note.trim()
-                };
-
-                if (saveBookmark(bookmark)) {
-                    alert('✓ Bookmark added!');
-                }
-            } catch (e) {
-                console.error('Error adding bookmark:', e);
-                alert('Failed to add bookmark');
-            }
-        });
+            });
+        } else {
+            console.error('DEBUG ERROR: Bookmark button NOT found!');
+        }
 
         // Store current search query and result info globally
         let currentSearchQuery = '';

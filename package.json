@@ -1,6 +1,6 @@
 {
   "name": "bhagavad-gita-app",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "A searchable version of the Bhagavad-gita As It Is by A. C. Bhaktivedanta Swami Prabhupada.",
   "main": "electron.js",
   "scripts": {
