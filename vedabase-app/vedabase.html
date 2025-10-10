@@ -1655,53 +1655,55 @@
         statsBtn.addEventListener('click', showStats);
 
         // Add bookmark at current location
-        addBookmarkBtn.addEventListener('click', () => {
-            try {
-                const iframeDoc = contentFrame.contentWindow.document;
+        if (addBookmarkBtn) {
+            addBookmarkBtn.addEventListener('click', () => {
+                try {
+                    const iframeDoc = contentFrame.contentWindow.document;
 
-                // Get current scroll position and find nearest heading
-                const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
-                const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
+                    // Get current scroll position and find nearest heading
+                    const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+                    const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
 
-                let nearestHeading = null;
-                let minDistance = Infinity;
+                    let nearestHeading = null;
+                    let minDistance = Infinity;
 
-                headings.forEach(heading => {
-                    const rect = heading.getBoundingClientRect();
-                    const headingY = rect.top + scrollY;
-                    const distance = Math.abs(headingY - scrollY);
+                    headings.forEach(heading => {
+                        const rect = heading.getBoundingClientRect();
+                        const headingY = rect.top + scrollY;
+                        const distance = Math.abs(headingY - scrollY);
 
-                    if (distance < minDistance && headingY <= scrollY + 200) {
-                        minDistance = distance;
-                        nearestHeading = heading;
+                        if (distance < minDistance && headingY <= scrollY + 200) {
+                            minDistance = distance;
+                            nearestHeading = heading;
+                        }
+                    });
+
+                    if (!nearestHeading) {
+                        alert('Could not determine current location. Please scroll to a section heading.');
+                        return;
                     }
-                });
 
-                if (!nearestHeading) {
-                    alert('Could not determine current location. Please scroll to a section heading.');
-                    return;
+                    const note = prompt('Add a note to this bookmark (optional):');
+                    if (note === null) return; // User cancelled
+
+                    const bookmark = {
+                        source: bookNames[currentSrc],
+                        sourcePath: currentSrc,
+                        headingId: nearestHeading.id,
+                        title: nearestHeading.textContent.trim(),
+                        timestamp: Date.now(),
+                        note: note.trim()
+                    };
+
+                    if (saveBookmark(bookmark)) {
+                        alert('✓ Bookmark added!');
+                    }
+                } catch (e) {
+                    console.error('Error adding bookmark:', e);
+                    alert('Failed to add bookmark: ' + e.message);
                 }
-
-                const note = prompt('Add a note to this bookmark (optional):');
-                if (note === null) return; // User cancelled
-
-                const bookmark = {
-                    source: bookNames[currentSrc],
-                    sourcePath: currentSrc,
-                    headingId: nearestHeading.id,
-                    title: nearestHeading.textContent.trim(),
-                    timestamp: Date.now(),
-                    note: note.trim()
-                };
-
-                if (saveBookmark(bookmark)) {
-                    alert('✓ Bookmark added!');
-                }
-            } catch (e) {
-                console.error('Error adding bookmark:', e);
-                alert('Failed to add bookmark');
-            }
-        });
+            });
+        }
 
         // Store current search query and result info globally
         let currentSearchQuery = '';
