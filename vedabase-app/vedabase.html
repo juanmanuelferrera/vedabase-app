@@ -487,9 +487,6 @@
                         if (addBookmarkBtn) {
                             addBookmarkBtn.style.display = 'inline-block';
                             addBookmarkBtn.style.visibility = 'visible';
-                            alert('Bookmark button should now be visible!');
-                        } else {
-                            alert('ERROR: addBookmarkBtn element not found!');
                         }
 
                         // If there's an active search, apply it to the newly loaded page
@@ -512,31 +509,14 @@
             });
         });
 
-        // Initial load handler - also apply search if exists
-        window.addEventListener('load', () => {
-            const originalOnload = contentFrame.onload;
-            contentFrame.onload = function() {
-                // Call original if it exists
-                if (originalOnload) originalOnload.call(this);
-
-                loading.classList.add('hidden');
-                contentFrame.classList.remove('hidden');
-                isLoading = false;
-
-                // Show Add Bookmark button when initial content is loaded
-                if (addBookmarkBtn) {
-                    addBookmarkBtn.style.display = 'inline-block';
-                    addBookmarkBtn.style.visibility = 'visible';
-                    alert('INITIAL LOAD: Bookmark button should now be visible!');
-                } else {
-                    alert('INITIAL LOAD ERROR: addBookmarkBtn element not found!');
-                }
-
-                // If there's an active search, apply it to the initial page
-                if (window.currentSearchQuery) {
-                    applySearchToLoadedFrame();
-                }
-            };
+        // Show button on initial iframe load
+        contentFrame.addEventListener('load', function initialLoad() {
+            if (addBookmarkBtn) {
+                addBookmarkBtn.style.display = 'inline-block';
+                addBookmarkBtn.style.visibility = 'visible';
+            }
+            // Remove this listener after first load
+            contentFrame.removeEventListener('load', initialLoad);
         });
 
         // Aggressive preloading - start preloading all pages after initial load
@@ -1676,19 +1656,12 @@
 
         // Add bookmark at current location
         addBookmarkBtn.addEventListener('click', () => {
-            alert('Bookmark button clicked!');
-            console.log('Bookmark button clicked, contentFrame:', contentFrame);
-
             try {
                 const iframeDoc = contentFrame.contentWindow.document;
-                console.log('iframeDoc:', iframeDoc);
 
                 // Get current scroll position and find nearest heading
                 const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
-                console.log('scrollY:', scrollY);
-
                 const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
-                console.log('Found headings:', headings.length);
 
                 let nearestHeading = null;
                 let minDistance = Infinity;
@@ -1703,8 +1676,6 @@
                         nearestHeading = heading;
                     }
                 });
-
-                console.log('nearestHeading:', nearestHeading);
 
                 if (!nearestHeading) {
                     alert('Could not determine current location. Please scroll to a section heading.');
