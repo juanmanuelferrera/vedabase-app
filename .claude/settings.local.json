@@ -24,7 +24,8 @@
       "Bash(export PATH=\"$HOME/.cargo/bin:$PATH\")",
       "Bash(open:*)",
       "Bash(npm run tauri:*)",
-      "Bash(pgrep:*)"
+      "Bash(pgrep:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
