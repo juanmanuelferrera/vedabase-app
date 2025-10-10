@@ -484,10 +484,12 @@
                         isLoading = false;
 
                         // Show Add Bookmark button when content is loaded
-                        console.log('Showing bookmark button, element:', addBookmarkBtn);
                         if (addBookmarkBtn) {
                             addBookmarkBtn.style.display = 'inline-block';
-                            console.log('Bookmark button display set to inline-block');
+                            addBookmarkBtn.style.visibility = 'visible';
+                            alert('Bookmark button should now be visible!');
+                        } else {
+                            alert('ERROR: addBookmarkBtn element not found!');
                         }
 
                         // If there's an active search, apply it to the newly loaded page
@@ -522,10 +524,12 @@
                 isLoading = false;
 
                 // Show Add Bookmark button when initial content is loaded
-                console.log('Initial load: Showing bookmark button, element:', addBookmarkBtn);
                 if (addBookmarkBtn) {
                     addBookmarkBtn.style.display = 'inline-block';
-                    console.log('Initial load: Bookmark button display set to inline-block');
+                    addBookmarkBtn.style.visibility = 'visible';
+                    alert('INITIAL LOAD: Bookmark button should now be visible!');
+                } else {
+                    alert('INITIAL LOAD ERROR: addBookmarkBtn element not found!');
                 }
 
                 // If there's an active search, apply it to the initial page
