@@ -483,6 +483,8 @@
                         contentFrame.classList.remove('hidden');
                         isLoading = false;
 
+                        // Show Add Bookmark button when content is loaded
+                        addBookmarkBtn.classList.remove('hidden');
 
                         // If there's an active search, apply it to the newly loaded page
                         if (window.currentSearchQuery) {
@@ -515,6 +517,8 @@
                 contentFrame.classList.remove('hidden');
                 isLoading = false;
 
+                // Show Add Bookmark button when initial content is loaded
+                addBookmarkBtn.classList.remove('hidden');
 
                 // If there's an active search, apply it to the initial page
                 if (window.currentSearchQuery) {
@@ -1406,11 +1410,6 @@
 
         // Show bookmarks when button clicked
         bookmarksBtn.addEventListener('click', showBookmarks);
-
-        // Show "Add Bookmark" button when content is visible
-        window.addEventListener('load', () => {
-            addBookmarkBtn.classList.remove('hidden');
-        });
 
         // Reading Progress Tracker
         function saveReadingProgress() {
