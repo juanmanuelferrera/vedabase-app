@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+src-tauri/target/
+
+# Tauri bundles (large files)
+*.dmg
+*.app
+*.deb
+*.rpm
+*.AppImage
+*.exe
+*.msi
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+
+# Mobile platforms
+ios/App/Pods/
+ios/App/App/public/
+android/
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git remote set-url:*)",
+      "Bash(git push:*)",
+      "Bash(npm start)",
+      "Bash(git tag:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Linux app build support\n\n- Configure electron-builder for Linux AppImage, DEB, and RPM\n- Add GitHub Actions job for Linux builds\n- All three platforms (Windows, Mac, Linux) now build automatically\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(cat:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:mac:*)",
+      "Bash(git reset:*)",
+      "Bash(npm install:*)",
+      "Bash(npx cap init:*)",
+      "Bash(npx cap add:*)",
+      "Bash(npx cap sync:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(ffmpeg:*)",
+      "Bash(curl -O https://vaishnavauploads.pages.dev/vedabase/bg.html)",
+      "Bash(source \"$HOME/.cargo/env\")",
+      "Bash(npm run tauri:build:*)",
+      "Bash(curl:*)",
+      "Bash(export PATH=\"$HOME/.cargo/bin:$PATH\")",
+      "Bash(open:*)",
+      "Bash(npm run tauri:*)",
+      "Bash(pgrep:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

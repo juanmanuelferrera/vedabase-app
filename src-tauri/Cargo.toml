@@ -1,0 +1,21 @@
+[package]
+name = "bhagavad-gita-app"
+version = "1.0.0"
+description = "A searchable version of the Bhagavad-gita and Vedabase"
+authors = ["Juan Manuel Ferrera"]
+license = "ISC"
+repository = "https://github.com/juanmanuelferrera/bhagavad-gita-app"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.1", features = [] }
+
+[dependencies]
+tauri = { version = "2.1", features = [] }
+tauri-plugin-shell = "2.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

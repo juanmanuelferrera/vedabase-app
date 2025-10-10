@@ -1,0 +1,81 @@
+{
+  "name": "bhagavad-gita-app",
+  "version": "1.0.0",
+  "description": "A searchable version of the Bhagavad-gita As It Is by A. C. Bhaktivedanta Swami Prabhupada.",
+  "main": "electron.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "build:all": "electron-builder -mwl",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juanmanuelferrera/bhagavad-gita-app.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Juan Manuel Ferrera",
+    "email": "juanmanuelferrera@example.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juanmanuelferrera/bhagavad-gita-app/issues"
+  },
+  "homepage": "https://github.com/juanmanuelferrera/bhagavad-gita-app#readme",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-icon-builder": "^2.0.1"
+  },
+  "build": {
+    "appId": "com.bhagavadgita.app",
+    "productName": "Bhagavad-gita",
+    "publish": null,
+    "files": [
+      "electron.js",
+      "index.html"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.education",
+      "icon": "build/icon.icns",
+      "identity": null
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "category": "Education",
+      "icon": "build/icons"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3",
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/cli": "^2.8.4"
+  }
+}
