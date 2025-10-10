@@ -348,6 +348,19 @@
         🔖 Add
     </button>
 
+    <!-- Custom Note Dialog -->
+    <div id="note-dialog" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 90%;">
+            <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 20px;">Add Note to Bookmark</h3>
+            <p style="margin: 0 0 15px 0; color: #6b7280; font-size: 14px;">Add an optional note to help you remember why you bookmarked this location.</p>
+            <textarea id="note-input" placeholder="Enter your note here (optional)..." style="width: 100%; min-height: 100px; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; margin-bottom: 20px;"></textarea>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="note-cancel-btn" style="padding: 10px 20px; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Cancel</button>
+                <button id="note-save-btn" style="padding: 10px 20px; background: #7c3aed; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Save Bookmark</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation Buttons (fixed position) -->
     <button id="prev-result-btn" class="hidden" style="position: fixed; bottom: 32px; right: 200px; padding: 12px 24px; background: #2563eb; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">
         ← Previous
@@ -1278,8 +1291,11 @@
         }
 
         function saveBookmark(bookmark) {
+            alert('DEBUG saveBookmark: Function called with bookmark: ' + JSON.stringify(bookmark));
             try {
+                alert('DEBUG saveBookmark: Getting existing bookmarks...');
                 let bookmarks = getBookmarks();
+                alert('DEBUG saveBookmark: Got ' + bookmarks.length + ' existing bookmarks');
 
                 // Check if bookmark already exists at this location
                 const exists = bookmarks.some(b =>
@@ -1292,13 +1308,18 @@
                     return false;
                 }
 
+                alert('DEBUG saveBookmark: Adding bookmark to array...');
                 bookmarks.unshift(bookmark);
+
+                alert('DEBUG saveBookmark: Saving to localStorage...');
                 localStorage.setItem('vedabaseBookmarks', JSON.stringify(bookmarks));
+
+                alert('DEBUG saveBookmark: Bookmark saved successfully!');
                 console.log('✓ Bookmark saved');
                 return true;
             } catch (e) {
                 console.error('Error saving bookmark:', e);
-                alert('Failed to save bookmark');
+                alert('DEBUG saveBookmark ERROR: ' + e.message + '\nStack: ' + e.stack);
                 return false;
             }
         }
@@ -1655,14 +1676,23 @@
         statsBtn.addEventListener('click', showStats);
 
         // Add bookmark at current location
+        console.log('DEBUG: addBookmarkBtn =', addBookmarkBtn);
         if (addBookmarkBtn) {
+            console.log('DEBUG: Attaching click listener to bookmark button');
             addBookmarkBtn.addEventListener('click', () => {
+                console.log('DEBUG: Bookmark button clicked!');
                 try {
+                    console.log('DEBUG: contentFrame =', contentFrame);
+                    console.log('DEBUG: Trying to access iframe document...');
                     const iframeDoc = contentFrame.contentWindow.document;
+                    console.log('DEBUG: Got iframe document', iframeDoc);
 
                     // Get current scroll position and find nearest heading
                     const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+                    console.log('DEBUG: Scroll position:', scrollY);
+
                     const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
+                    console.log('DEBUG: Found', headings.length, 'headings');
 
                     let nearestHeading = null;
                     let minDistance = Infinity;
@@ -1679,30 +1709,93 @@
                     });
 
                     if (!nearestHeading) {
+                        console.log('DEBUG: No nearest heading found!');
                         alert('Could not determine current location. Please scroll to a section heading.');
                         return;
                     }
 
-                    const note = prompt('Add a note to this bookmark (optional):');
-                    if (note === null) return; // User cancelled
+                    console.log('DEBUG: Found nearest heading:', nearestHeading.textContent.trim());
 
-                    const bookmark = {
-                        source: bookNames[currentSrc],
-                        sourcePath: currentSrc,
-                        headingId: nearestHeading.id,
-                        title: nearestHeading.textContent.trim(),
-                        timestamp: Date.now(),
-                        note: note.trim()
+                    // Show custom note dialog
+                    const noteDialog = document.getElementById('note-dialog');
+                    const noteInput = document.getElementById('note-input');
+                    const noteSaveBtn = document.getElementById('note-save-btn');
+                    const noteCancelBtn = document.getElementById('note-cancel-btn');
+
+                    // Clear previous note
+                    noteInput.value = '';
+
+                    // Show dialog
+                    noteDialog.style.display = 'flex';
+                    noteInput.focus();
+
+                    // Handle save button click
+                    const handleSave = () => {
+                        const note = noteInput.value.trim();
+                        console.log('DEBUG: User entered note:', note);
+
+                        const bookmark = {
+                            source: bookNames[currentSrc],
+                            sourcePath: currentSrc,
+                            headingId: nearestHeading.id,
+                            title: nearestHeading.textContent.trim(),
+                            timestamp: Date.now(),
+                            note: note
+                        };
+
+                        console.log('DEBUG: Bookmark object created:', bookmark);
+                        const saveResult = saveBookmark(bookmark);
+                        console.log('DEBUG: saveBookmark returned:', saveResult);
+
+                        if (saveResult) {
+                            // Show success message
+                            const successMsg = document.createElement('div');
+                            successMsg.textContent = '✓ Bookmark saved!';
+                            successMsg.style.cssText = 'position: fixed; top: 80px; right: 32px; background: #10b981; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1001; font-weight: 600; animation: slideIn 0.3s ease;';
+                            document.body.appendChild(successMsg);
+                            setTimeout(() => {
+                                successMsg.style.animation = 'slideOut 0.3s ease';
+                                setTimeout(() => successMsg.remove(), 300);
+                            }, 2000);
+                        }
+
+                        // Hide dialog and cleanup
+                        noteDialog.style.display = 'none';
+                        noteSaveBtn.removeEventListener('click', handleSave);
+                        noteCancelBtn.removeEventListener('click', handleCancel);
                     };
 
-                    if (saveBookmark(bookmark)) {
-                        alert('✓ Bookmark added!');
-                    }
+                    // Handle cancel button click
+                    const handleCancel = () => {
+                        console.log('DEBUG: User cancelled bookmark');
+                        noteDialog.style.display = 'none';
+                        noteSaveBtn.removeEventListener('click', handleSave);
+                        noteCancelBtn.removeEventListener('click', handleCancel);
+                    };
+
+                    noteSaveBtn.addEventListener('click', handleSave);
+                    noteCancelBtn.addEventListener('click', handleCancel);
+
+                    // Handle Enter key to save
+                    const handleKeyPress = (e) => {
+                        if (e.key === 'Enter' && e.ctrlKey) {
+                            handleSave();
+                            noteInput.removeEventListener('keypress', handleKeyPress);
+                        } else if (e.key === 'Escape') {
+                            handleCancel();
+                            noteInput.removeEventListener('keypress', handleKeyPress);
+                        }
+                    };
+                    noteInput.addEventListener('keypress', handleKeyPress);
                 } catch (e) {
-                    console.error('Error adding bookmark:', e);
-                    alert('Failed to add bookmark: ' + e.message);
+                    console.error('DEBUG: Error adding bookmark:', e);
+                    console.error('DEBUG: Error message:', e.message);
+                    console.error('DEBUG: Error stack:', e.stack);
+                    alert('DEBUG ERROR: ' + e.message);
                 }
             });
+        } else {
+            console.error('DEBUG ERROR: Bookmark button NOT found!');
         }
 
         // Store current search query and result info globally
