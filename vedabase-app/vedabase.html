@@ -1563,59 +1563,64 @@
             statsPanel.style.borderRadius = '8px';
             statsPanel.style.margin = '1rem';
 
+            const isDark = document.body.classList.contains('dark-mode');
+            const cardBg = isDark ? '#1a1a1a' : 'rgb(249 250 251)';
+            const textColor = isDark ? '#ffffff' : '#000000';
+            const subTextColor = isDark ? '#a0a0a0' : 'rgb(75 85 99)';
+
             const html = `
-                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 class="text-lg font-semibold">📊 Reading Statistics</h3>
+                <div class="p-4 border-b flex justify-between items-center" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                    <h3 class="text-lg font-semibold" style="color: ${textColor}">📊 Reading Statistics</h3>
                     <button onclick="closeStats()" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
                         Close
                     </button>
                 </div>
                 <div class="p-6 space-y-6">
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 bg-blue-50 rounded-lg">
-                            <div class="text-3xl font-bold text-blue-600">${daysSinceFirst}</div>
-                            <div class="text-sm text-gray-600">Days since first use</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#1a1a3a' : 'rgb(239 246 255)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#60a5fa' : 'rgb(37 99 235)'}">${daysSinceFirst}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Days since first use</div>
                         </div>
-                        <div class="p-4 bg-purple-50 rounded-lg">
-                            <div class="text-3xl font-bold text-purple-600">${stats.totalSearches}</div>
-                            <div class="text-sm text-gray-600">Total searches</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#2a1a3a' : 'rgb(250 245 255)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#a78bfa' : 'rgb(147 51 234)'}">${stats.totalSearches}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Total searches</div>
                         </div>
-                        <div class="p-4 bg-green-50 rounded-lg">
-                            <div class="text-3xl font-bold text-green-600">${bookmarks.length}</div>
-                            <div class="text-sm text-gray-600">Bookmarks saved</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#1a2a1a' : 'rgb(240 253 244)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#4ade80' : 'rgb(22 163 74)'}">${bookmarks.length}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Bookmarks saved</div>
                         </div>
-                        <div class="p-4 bg-orange-50 rounded-lg">
-                            <div class="text-3xl font-bold text-orange-600">${Object.keys(stats.booksVisited).length}</div>
-                            <div class="text-sm text-gray-600">Books explored</div>
-                        </div>
-                    </div>
-
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold mb-2">📚 Most Visited Book</h4>
-                        <div class="p-3 bg-gray-50 rounded">
-                            <div class="font-medium">${mostVisited}</div>
-                            <div class="text-sm text-gray-600">${maxVisits} visits</div>
+                        <div class="p-4 rounded-lg" style="background: ${isDark ? '#2a1a0a' : 'rgb(255 247 237)'}">
+                            <div class="text-3xl font-bold" style="color: ${isDark ? '#fb923c' : 'rgb(234 88 12)'}">${Object.keys(stats.booksVisited).length}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">Books explored</div>
                         </div>
                     </div>
 
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold mb-2">🔍 Recent Searches</h4>
+                    <div class="border-t pt-4" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                        <h4 class="font-semibold mb-2" style="color: ${textColor}">📚 Most Visited Book</h4>
+                        <div class="p-3 rounded" style="background: ${cardBg}">
+                            <div class="font-medium" style="color: ${textColor}">${mostVisited}</div>
+                            <div class="text-sm" style="color: ${subTextColor}">${maxVisits} visits</div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                        <h4 class="font-semibold mb-2" style="color: ${textColor}">🔍 Recent Searches</h4>
                         <div class="space-y-2">
                             ${history.slice(0, 5).map(query => `
-                                <div class="p-2 bg-gray-50 rounded text-sm">${query}</div>
-                            `).join('') || '<div class="text-sm text-gray-500">No searches yet</div>'}
+                                <div class="p-2 rounded text-sm" style="background: ${cardBg}; color: ${textColor}">${query}</div>
+                            `).join('') || `<div class="text-sm" style="color: ${subTextColor}">No searches yet</div>`}
                         </div>
                     </div>
 
-                    <div class="border-t pt-4">
-                        <h4 class="font-semibold mb-2">📖 Book Visit Summary</h4>
+                    <div class="border-t pt-4" style="border-color: ${isDark ? '#2a2a2a' : 'rgb(229 231 235)'}">
+                        <h4 class="font-semibold mb-2" style="color: ${textColor}">📖 Book Visit Summary</h4>
                         <div class="space-y-2">
                             ${Object.entries(stats.booksVisited).map(([path, data]) => `
-                                <div class="flex justify-between items-center p-2 bg-gray-50 rounded text-sm">
-                                    <span>${bookNames[path] || path}</span>
-                                    <span class="text-gray-600">${data.visits} visits</span>
+                                <div class="flex justify-between items-center p-2 rounded text-sm" style="background: ${cardBg}">
+                                    <span style="color: ${textColor}">${bookNames[path] || path}</span>
+                                    <span style="color: ${subTextColor}">${data.visits} visits</span>
                                 </div>
-                            `).join('') || '<div class="text-sm text-gray-500">No visits tracked yet</div>'}
+                            `).join('') || `<div class="text-sm" style="color: ${subTextColor}">No visits tracked yet</div>`}
                         </div>
                     </div>
                 </div>
