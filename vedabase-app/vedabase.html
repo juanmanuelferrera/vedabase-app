@@ -1676,12 +1676,19 @@
 
         // Add bookmark at current location
         addBookmarkBtn.addEventListener('click', () => {
+            alert('Bookmark button clicked!');
+            console.log('Bookmark button clicked, contentFrame:', contentFrame);
+
             try {
                 const iframeDoc = contentFrame.contentWindow.document;
+                console.log('iframeDoc:', iframeDoc);
 
                 // Get current scroll position and find nearest heading
                 const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+                console.log('scrollY:', scrollY);
+
                 const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
+                console.log('Found headings:', headings.length);
 
                 let nearestHeading = null;
                 let minDistance = Infinity;
@@ -1696,6 +1703,8 @@
                         nearestHeading = heading;
                     }
                 });
+
+                console.log('nearestHeading:', nearestHeading);
 
                 if (!nearestHeading) {
                     alert('Could not determine current location. Please scroll to a section heading.');
