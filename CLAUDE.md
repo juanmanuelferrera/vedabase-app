@@ -1,0 +1,2 @@
+- always use Tauri to build the app
+- no preguntes cuando tengas que build el app

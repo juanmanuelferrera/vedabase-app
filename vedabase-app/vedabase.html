@@ -386,39 +386,18 @@
 
             updateButton();
 
-            // Function to apply dark mode to iframe
+            // Function to apply dark mode to iframe by adding/removing class
             function applyDarkModeToIframe(isDark) {
                 const iframe = document.getElementById('content-frame');
                 if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
                     try {
-                        const iframeDoc = iframe.contentWindow.document;
-                        let style = iframeDoc.getElementById('parent-dark-mode-style');
-
-                        if (!style) {
-                            style = iframeDoc.createElement('style');
-                            style.id = 'parent-dark-mode-style';
-                            iframeDoc.head.appendChild(style);
-                        }
-
-                        if (isDark) {
-                            style.textContent = `
-                                html, html body, html body * {
-                                    background-color: #000000 !important;
-                                    background: #000000 !important;
-                                }
-                                html, html body, html body *,
-                                html body p, html body h1, html body h2, html body h3, html body h4, html body h5, html body h6,
-                                html body div, html body span, html body li, html body td, html body th,
-                                html body blockquote, html body pre, html body code,
-                                html body .content, html body #content, html body #text-table-of-contents {
-                                    color: #ffffff !important;
-                                }
-                                html body a, html body a * {
-                                    color: #60a5fa !important;
-                                }
-                            `;
-                        } else {
-                            style.textContent = '';
+                        const iframeBody = iframe.contentWindow.document.body;
+                        if (iframeBody) {
+                            if (isDark) {
+                                iframeBody.classList.add('dark-mode');
+                            } else {
+                                iframeBody.classList.remove('dark-mode');
+                            }
                         }
                     } catch (e) {
                         // Iframe not yet loaded or cross-origin, ignore
@@ -443,6 +422,18 @@
                     const isDark = document.body.classList.contains('dark-mode');
                     applyDarkModeToIframe(isDark);
                 });
+
+                // Try to apply multiple times to handle race conditions
+                // This ensures dark mode works on initial load and when content changes
+                const applyOnLoad = () => {
+                    const isDark = document.body.classList.contains('dark-mode');
+                    applyDarkModeToIframe(isDark);
+                };
+
+                setTimeout(applyOnLoad, 50);
+                setTimeout(applyOnLoad, 200);
+                setTimeout(applyOnLoad, 500);
+                setTimeout(applyOnLoad, 1000);
             }
         });
 
