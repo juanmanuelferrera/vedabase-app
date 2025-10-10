@@ -230,13 +230,28 @@
         <div class="gatekeeper-notice">
             <h3>🔒 macOS Gatekeeper Notice</h3>
             <p style="margin-bottom: 15px;">Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.</p>
-            <p><strong>To bypass Gatekeeper:</strong></p>
+
+            <p><strong>Installation steps:</strong></p>
+            <ol>
+                <li>Unzip the downloaded <strong>Vedabase.app.zip</strong> file</li>
+                <li>Move <strong>Vedabase.app</strong> to your <strong>Applications</strong> folder</li>
+            </ol>
+
+            <p style="margin-top: 15px;"><strong>Method 1: System Settings (older macOS versions)</strong></p>
             <ol>
                 <li>Try to open the app (it will be blocked)</li>
                 <li>Open <strong>System Settings → Privacy & Security</strong></li>
                 <li>Scroll down and click <strong>"Open Anyway"</strong></li>
                 <li>Confirm by clicking <strong>"Open"</strong></li>
             </ol>
+
+            <p style="margin-top: 15px;"><strong>Method 2: Terminal (macOS Tahoe and newer)</strong></p>
+            <ol>
+                <li>Open <strong>Terminal</strong> (press <strong>⌘+Space</strong>, type "Terminal", press Enter)</li>
+                <li>Run this command: <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 3px;">xattr -cr ~/Applications/Vedabase.app</code></li>
+                <li>Open the app normally</li>
+            </ol>
+
             <p style="margin-top: 15px;"><em>You only need to do this once. After the first launch, you can open it normally.</em></p>
         </div>
 
