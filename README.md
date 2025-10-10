@@ -1,19 +1,19 @@
 # Vedabase - Original
 
-A desktop application for reading the Bhagavad-gita As It Is (1972 edition) by A. C. Bhaktivedanta Swami Prabhupada.
+A desktop application for reading and studying the works by A. C. Bhaktivedanta Swami Prabhupada.
 
 ## Features
 
-- 🔍 **Full-text search** - Search through all chapters and verses
-- 🎯 **Highlight results** - Visual highlighting of search matches
-- ⏭️ **Navigate matches** - Previous/Next buttons to jump between results
-- 🔎 **Advanced search** - Regex support and search-within-results
-- 📑 **Cross-references** - Jump between referenced verses
-- 📝 **Notes & annotations** - Add personal notes to verses
-- 🌓 **Dark mode** - White text on black background for comfortable reading
-- 📖 **Table of Contents** - Collapsible TOC for easy navigation
-- 🎨 **Font size control** - Adjust text size to your preference
-- 💾 **Offline & standalone** - No internet required, all data embedded
+- 🔍 **Full-text search** - Search through all text with instant highlighting
+- 🎯 **Smart highlighting** - Visual emphasis on all search matches
+- ⏭️ **Navigate matches** - Jump between results with Previous/Next buttons
+- 🔎 **Advanced search** - Regex patterns and search-within-results filtering
+- 📑 **Cross-references** - Click verse references to jump instantly
+- 📝 **Personal notes** - Add, edit, and manage annotations on any verse
+- 🌓 **Dark mode** - True dark theme with white text on black background
+- 📖 **Interactive TOC** - One-click collapsible Table of Contents navigation
+- 🎨 **Font control** - Adjustable text size for comfortable reading
+- 💾 **Fully offline** - Standalone app with all content embedded, no internet needed
 
 ## Installation
 

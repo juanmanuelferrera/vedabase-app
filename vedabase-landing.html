@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedabase - Original | Desktop App for Srila Prabhupada's Works</title>
+    <meta name="description" content="Desktop application for reading and studying the works by A. C. Bhaktivedanta Swami Prabhupada. Features full-text search, cross-references, notes, and dark mode.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .tagline {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .download-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .version {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .features {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin: 40px auto;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: #667eea;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .gatekeeper-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .gatekeeper-notice h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .gatekeeper-notice ol {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .gatekeeper-notice li {
+            margin: 8px 0;
+        }
+
+        .screenshot {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .screenshot img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .download-btn {
+                font-size: 1.1em;
+                padding: 15px 30px;
+            }
+
+            .features h2 {
+                font-size: 2em;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vedabase - Original</h1>
+        <p class="subtitle">Desktop App for Srila Prabhupada's Works</p>
+        <p class="tagline">A powerful desktop application for reading and studying the works by A. C. Bhaktivedanta Swami Prabhupada</p>
+    </header>
+
+    <div class="container">
+        <div class="download-section">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">Download for macOS</h2>
+            <div style="text-align: center;">
+                <a href="#" class="download-btn">📥 Download Vedabase.app</a>
+                <p class="version">Version 1.1.0 • macOS 10.13+ • 28 MB</p>
+            </div>
+        </div>
+
+        <div class="gatekeeper-notice">
+            <h3>🔒 macOS Gatekeeper Notice</h3>
+            <p style="margin-bottom: 15px;">Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.</p>
+            <p><strong>To open the app:</strong></p>
+            <ol>
+                <li>Right-click (or Control-click) on <strong>Vedabase.app</strong></li>
+                <li>Select <strong>"Open"</strong> from the menu</li>
+                <li>Click <strong>"Open"</strong> in the dialog that appears</li>
+            </ol>
+            <p style="margin-top: 15px;"><em>You only need to do this once. After the first launch, you can open it normally.</em></p>
+        </div>
+
+        <div class="features">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Full-text Search</h3>
+                    <p>Search through all text with instant highlighting of matches</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Highlighting</h3>
+                    <p>Visual emphasis on all search matches with navigation controls</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🔎</div>
+                    <h3>Advanced Search</h3>
+                    <p>Regex patterns and search-within-results filtering</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📑</div>
+                    <h3>Cross-references</h3>
+                    <p>Click verse references to jump instantly between sections</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📝</div>
+                    <h3>Personal Notes</h3>
+                    <p>Add, edit, and manage annotations on any verse</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🌓</div>
+                    <h3>Dark Mode</h3>
+                    <p>True dark theme with white text on black background</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📖</div>
+                    <h3>Interactive TOC</h3>
+                    <p>One-click collapsible Table of Contents navigation</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Font Control</h3>
+                    <p>Adjustable text size for comfortable reading</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">💾</div>
+                    <h3>Fully Offline</h3>
+                    <p>Standalone app with all content embedded, no internet needed</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: white; border-radius: 20px; padding: 40px; margin: 40px auto; max-width: 900px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Building from Source</h2>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.9em;">
+                <p style="margin-bottom: 15px;"><strong>Prerequisites:</strong> Node.js, Rust and Cargo, Tauri CLI</p>
+                <p style="margin-bottom: 10px;"><code># Install dependencies</code></p>
+                <p style="margin-bottom: 10px;"><code>npm install</code></p>
+                <br>
+                <p style="margin-bottom: 10px;"><code># Development mode</code></p>
+                <p style="margin-bottom: 10px;"><code>npm run tauri:dev</code></p>
+                <br>
+                <p style="margin-bottom: 10px;"><code># Production build</code></p>
+                <p><code>npm run tauri:build</code></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Original text: <a href="https://vaishnavauploads.pages.dev/bg">Vaishnava Uploads</a></p>
+        <p style="margin-top: 10px;">Author: A. C. Bhaktivedanta Swami Prabhupada</p>
+        <p style="margin-top: 20px; font-size: 0.9em;">Built with ❤️ using Tauri</p>
+    </footer>
+</body>
+</html>
