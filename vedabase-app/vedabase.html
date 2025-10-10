@@ -344,7 +344,7 @@
     <div id="stats-panel" class="hidden"></div>
 
     <!-- Floating bookmark button (appears when reading) -->
-    <button id="add-bookmark-btn" class="hidden" style="position: fixed; bottom: 120px; right: 32px; padding: 12px 16px; background: #7c3aed; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'" title="Add bookmark at current location">
+    <button id="add-bookmark-btn" style="display: none; position: fixed; bottom: 120px; right: 32px; padding: 12px 16px; background: #7c3aed; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'" title="Add bookmark at current location">
         🔖 Add
     </button>
 
@@ -484,7 +484,7 @@
                         isLoading = false;
 
                         // Show Add Bookmark button when content is loaded
-                        addBookmarkBtn.classList.remove('hidden');
+                        addBookmarkBtn.style.display = 'block';
 
                         // If there's an active search, apply it to the newly loaded page
                         if (window.currentSearchQuery) {
@@ -518,7 +518,7 @@
                 isLoading = false;
 
                 // Show Add Bookmark button when initial content is loaded
-                addBookmarkBtn.classList.remove('hidden');
+                addBookmarkBtn.style.display = 'block';
 
                 // If there's an active search, apply it to the initial page
                 if (window.currentSearchQuery) {
