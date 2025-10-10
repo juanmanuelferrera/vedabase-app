@@ -179,6 +179,31 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
+        .video-showcase {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px auto 40px;
+            max-width: 900px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .video-showcase h2 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        .video-showcase video {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -219,6 +244,14 @@
     </header>
 
     <div class="container">
+        <div class="video-showcase">
+            <h2>See Vedabase in Action</h2>
+            <video controls autoplay muted loop playsinline>
+                <source src="vedabase-showcase.mov" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
         <div class="download-section">
             <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">Download for macOS</h2>
             <div style="text-align: center;">
