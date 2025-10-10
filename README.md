@@ -1,44 +1,65 @@
-# Bhagavad-gita As It Is (1972) - Searchable Edition
+# Vedabase - Original
 
-A searchable version of the Bhagavad-gita As It Is by A. C. Bhaktivedanta Swami Prabhupada.
+A desktop application for reading the Bhagavad-gita As It Is (1972 edition) by A. C. Bhaktivedanta Swami Prabhupada.
 
 ## Features
 
 - 🔍 **Full-text search** - Search through all chapters and verses
 - 🎯 **Highlight results** - Visual highlighting of search matches
 - ⏭️ **Navigate matches** - Previous/Next buttons to jump between results
-- 📱 **Responsive** - Works on desktop and mobile browsers
-- 💾 **Self-contained** - No internet required after download
+- 🔎 **Advanced search** - Regex support and search-within-results
+- 📑 **Cross-references** - Jump between referenced verses
+- 📝 **Notes & annotations** - Add personal notes to verses
+- 🌓 **Dark mode** - White text on black background for comfortable reading
+- 📖 **Table of Contents** - Collapsible TOC for easy navigation
+- 🎨 **Font size control** - Adjust text size to your preference
+- 💾 **Offline & standalone** - No internet required, all data embedded
 
-## Usage
+## Installation
 
-### Online
-Visit: https://[your-username].github.io/bhagavad-gita-app/
+### macOS
 
-### Offline
-1. Download `index.html`
-2. Open it in any web browser (Chrome, Firefox, Safari, Edge)
-3. Use the search bar at the top to find any text
+1. Download `Vedabase.app` from the releases
+2. Copy to `/Applications` or anywhere you prefer
+3. **First launch**: Right-click the app and select "Open" (see Gatekeeper note below)
+4. Click "Open" in the security dialog
 
-### Create Desktop App
+#### macOS Gatekeeper Notice
 
-#### macOS
+Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.
+
+**To open the app:**
+1. Right-click (or Control-click) on `Vedabase.app`
+2. Select "Open" from the menu
+3. Click "Open" in the dialog that appears
+
+**Alternative method:**
+1. Try to open the app normally (it will be blocked)
+2. Go to System Preferences → Security & Privacy
+3. Click "Open Anyway" for Vedabase
+
+You only need to do this once. After the first launch, you can open it normally.
+
+### Building from Source
+
+**Prerequisites:**
+- Node.js
+- Rust and Cargo
+- Tauri CLI
+
+**Build commands:**
 ```bash
-npm install -g nativefier
-nativefier --name "Bhagavad-gita" "https://[your-username].github.io/bhagavad-gita-app/"
+# Install dependencies
+npm install
+
+# Development mode
+npm run tauri:dev
+
+# Production build
+npm run tauri:build
 ```
 
-#### Windows
-```bash
-npm install -g nativefier
-nativefier --name "Bhagavad-gita" --platform windows "https://[your-username].github.io/bhagavad-gita-app/"
-```
-
-#### Linux
-```bash
-npm install -g nativefier
-nativefier --name "Bhagavad-gita" --platform linux "https://[your-username].github.io/bhagavad-gita-app/"
-```
+The built app will be in `src-tauri/target/release/bundle/`
 
 ## Credits
 
