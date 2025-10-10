@@ -21,6 +21,14 @@
 <style id="toc-force-collapse">
 #text-table-of-contents ul ul { display: none !important; }
 #text-table-of-contents li.expanded > ul { display: block !important; }
+
+/* Hide TOC toggle triangles - only click chapter name */
+#text-table-of-contents li:before {
+    display: none !important;
+}
+.toc-indicator {
+    display: none !important;
+}
 </style>
 <style id="dark-mode-styles">
 /* Dark mode CSS - applied when body has class "dark-mode" */

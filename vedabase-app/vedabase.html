@@ -252,7 +252,7 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4">
             <h1 class="text-3xl font-sanskrit text-orange-600 text-center">
-                Vedabase - Complete Collection
+                Vedabase - Original Books
             </h1>
             <!-- Search Bar -->
             <div class="mt-4">
@@ -1324,8 +1324,9 @@
 
             bookmarksPanel.style.maxHeight = '60vh';
             bookmarksPanel.style.overflowY = 'auto';
-            bookmarksPanel.style.background = 'white';
-            bookmarksPanel.style.border = '1px solid #e5e7eb';
+            bookmarksPanel.style.background = document.body.classList.contains('dark-mode') ? '#000000' : 'white';
+            bookmarksPanel.style.color = document.body.classList.contains('dark-mode') ? '#ffffff' : '#000000';
+            bookmarksPanel.style.border = document.body.classList.contains('dark-mode') ? '1px solid #2a2a2a' : '1px solid #e5e7eb';
             bookmarksPanel.style.borderRadius = '8px';
             bookmarksPanel.style.margin = '1rem';
 
@@ -1556,8 +1557,9 @@
 
             statsPanel.style.maxHeight = '60vh';
             statsPanel.style.overflowY = 'auto';
-            statsPanel.style.background = 'white';
-            statsPanel.style.border = '1px solid #e5e7eb';
+            statsPanel.style.background = document.body.classList.contains('dark-mode') ? '#000000' : 'white';
+            statsPanel.style.color = document.body.classList.contains('dark-mode') ? '#ffffff' : '#000000';
+            statsPanel.style.border = document.body.classList.contains('dark-mode') ? '1px solid #2a2a2a' : '1px solid #e5e7eb';
             statsPanel.style.borderRadius = '8px';
             statsPanel.style.margin = '1rem';
 
