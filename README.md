@@ -45,3 +45,5 @@ You only need to do this once. After the first launch, you can open it normally.
 Original text: [Vaishnava Uploads](https://vaishnavauploads.pages.dev/bg)
 
 Author: A. C. Bhaktivedanta Swami Prabhupada
+
+Sponsored by: [Vedic Vault](https://www.vedicvault.org/projects)
