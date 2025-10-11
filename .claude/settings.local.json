@@ -25,7 +25,11 @@
       "Bash(open:*)",
       "Bash(npm run tauri:*)",
       "Bash(pgrep:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(awk:*)",
+      "Bash(pkill:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

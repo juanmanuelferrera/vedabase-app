@@ -1,6 +1,6 @@
 {
   "productName": "Vedabase",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "identifier": "com.bhagavadgita.vedabase",
   "build": {
     "beforeDevCommand": "",
@@ -43,21 +43,14 @@
     "windows": [
       {
         "title": "Vedabase - Original",
-        "width": 1200,
-        "height": 800,
+        "width": 1400,
+        "height": 900,
         "resizable": true,
-        "fullscreen": false,
-        "webview": {
-          "transparent": false
-        }
+        "fullscreen": false
       }
     ],
     "security": {
       "csp": null
-    },
-    "webview": {
-      "userAgent": null,
-      "devtools": false
     }
   }
 }
