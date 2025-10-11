@@ -485,9 +485,34 @@
 
                 // Set timeout to show loading indicator for large files
                 const loadStartTime = Date.now();
+                let loadTimeoutId = null;
+                let slowLoadWarningShown = false;
+
+                // Show warning for large files (Lectures) after 10 seconds
+                const isLargeFile = src.includes('lec1.html') || src.includes('lec2.html');
+                if (isLargeFile) {
+                    loadTimeoutId = setTimeout(() => {
+                        if (isLoading && !slowLoadWarningShown) {
+                            slowLoadWarningShown = true;
+                            const loadingDiv = document.getElementById('loading');
+                            const warningText = document.createElement('p');
+                            warningText.style.color = 'white';
+                            warningText.style.marginTop = '20px';
+                            warningText.style.fontSize = '14px';
+                            warningText.textContent = 'Loading large file... This may take up to 60 seconds on Windows. Please wait.';
+                            warningText.id = 'loading-warning';
+                            loadingDiv.appendChild(warningText);
+                        }
+                    }, 10000); // Show warning after 10 seconds
+                }
 
                 // Load new content (browser automatically unloads previous iframe content)
                 contentFrame.onload = function() {
+                    // Clear timeout and remove warning if it was shown
+                    if (loadTimeoutId) clearTimeout(loadTimeoutId);
+                    const warningEl = document.getElementById('loading-warning');
+                    if (warningEl) warningEl.remove();
+
                     loadedPages.add(src);
                     const loadTime = Date.now() - loadStartTime;
 
@@ -514,10 +539,14 @@
 
                 // Handle load errors
                 contentFrame.onerror = function() {
+                    if (loadTimeoutId) clearTimeout(loadTimeoutId);
+                    const warningEl = document.getElementById('loading-warning');
+                    if (warningEl) warningEl.remove();
+
                     loading.classList.add('hidden');
                     contentFrame.classList.remove('hidden');
                     isLoading = false;
-                    alert('Error loading content. Please try again.');
+                    alert('Error loading content. The file may be too large. Please try again or restart the application.');
                 };
 
                 // Change iframe source - this unloads previous content from memory
