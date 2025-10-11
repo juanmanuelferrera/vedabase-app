@@ -40,27 +40,6 @@ Since this app is not signed with an Apple Developer certificate, macOS Gatekeep
 
 You only need to do this once. After the first launch, you can open it normally.
 
-### Building from Source
-
-**Prerequisites:**
-- Node.js
-- Rust and Cargo
-- Tauri CLI
-
-**Build commands:**
-```bash
-# Install dependencies
-npm install
-
-# Development mode
-npm run tauri:dev
-
-# Production build
-npm run tauri:build
-```
-
-The built app will be in `src-tauri/target/release/bundle/`
-
 ## Credits
 
 Original text: [Vaishnava Uploads](https://vaishnavauploads.pages.dev/bg)
