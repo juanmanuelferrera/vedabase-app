@@ -57,10 +57,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Mac Tauri app (unsigned)
+      - name: Build Mac Tauri app (ad-hoc signed)
         run: npm run tauri:build
-        env:
-          APPLE_SIGNING_IDENTITY: '-'
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
