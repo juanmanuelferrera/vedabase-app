@@ -1,6 +1,6 @@
 {
   "name": "bhagavad-gita-app",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "A searchable version of the Bhagavad-gita As It Is by A. C. Bhaktivedanta Swami Prabhupada.",
   "scripts": {
     "tauri": "tauri",
