@@ -437,10 +437,10 @@
 
     <!-- Custom Note Dialog -->
     <div id="note-dialog" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 90%;">
-            <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 20px;">Add Note to Bookmark</h3>
-            <p style="margin: 0 0 15px 0; color: #6b7280; font-size: 14px;">Add an optional note to help you remember why you bookmarked this location.</p>
-            <textarea id="note-input" placeholder="Enter your note here (optional)..." style="width: 100%; min-height: 100px; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; margin-bottom: 20px;"></textarea>
+        <div id="note-dialog-content" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 90%;">
+            <h3 id="note-dialog-title" style="margin: 0 0 15px 0; color: #374151; font-size: 20px;">Add Note to Bookmark</h3>
+            <p id="note-dialog-description" style="margin: 0 0 15px 0; color: #6b7280; font-size: 14px;">Add an optional note to help you remember why you bookmarked this location.</p>
+            <textarea id="note-input" placeholder="Enter your note here (optional)..." style="width: 100%; min-height: 100px; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; margin-bottom: 20px; color: #374151;"></textarea>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button id="note-cancel-btn" style="padding: 10px 20px; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Cancel</button>
                 <button id="note-save-btn" style="padding: 10px 20px; background: #7c3aed; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Save Bookmark</button>
@@ -486,6 +486,41 @@
 
             updateButton();
 
+            // Function to apply dark mode to note dialog
+            function applyDarkModeToNoteDialog(isDark) {
+                const dialogContent = document.getElementById('note-dialog-content');
+                const dialogTitle = document.getElementById('note-dialog-title');
+                const dialogDescription = document.getElementById('note-dialog-description');
+                const noteInput = document.getElementById('note-input');
+                const cancelBtn = document.getElementById('note-cancel-btn');
+
+                if (dialogContent) {
+                    if (isDark) {
+                        dialogContent.style.background = '#1f2937';
+                        dialogTitle.style.color = '#f9fafb';
+                        dialogDescription.style.color = '#d1d5db';
+                        noteInput.style.background = '#374151';
+                        noteInput.style.color = '#f9fafb';
+                        noteInput.style.borderColor = '#4b5563';
+                        cancelBtn.style.background = '#374151';
+                        cancelBtn.style.color = '#f9fafb';
+                    } else {
+                        dialogContent.style.background = 'white';
+                        dialogTitle.style.color = '#374151';
+                        dialogDescription.style.color = '#6b7280';
+                        noteInput.style.background = 'white';
+                        noteInput.style.color = '#374151';
+                        noteInput.style.borderColor = '#e5e7eb';
+                        cancelBtn.style.background = '#f3f4f6';
+                        cancelBtn.style.color = '#374151';
+                    }
+                }
+            }
+
+            // Apply dark mode to note dialog on load if dark mode is enabled
+            const isDarkOnLoad = document.body.classList.contains('dark-mode');
+            applyDarkModeToNoteDialog(isDarkOnLoad);
+
             // Function to apply dark mode to iframe by adding/removing class
             function applyDarkModeToIframe(isDark) {
                 const iframe = document.getElementById('content-frame');
@@ -512,6 +547,7 @@
                     localStorage.setItem('darkMode', isDark);
                     updateButton();
                     applyDarkModeToIframe(isDark);
+                    applyDarkModeToNoteDialog(isDark);
                 });
             }
 
