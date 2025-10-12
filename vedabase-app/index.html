@@ -274,16 +274,23 @@
         </div>
 
         <div class="gatekeeper-notice">
-            <h3>🔒 macOS Gatekeeper Notice</h3>
-            <p style="margin-bottom: 15px;">Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.</p>
-            <p><strong>To bypass Gatekeeper:</strong></p>
-            <ol>
-                <li>Try to open the app (it will be blocked)</li>
-                <li>Open <strong>System Settings → Privacy & Security</strong></li>
-                <li>Scroll down and click <strong>"Open Anyway"</strong></li>
-                <li>Confirm by clicking <strong>"Open"</strong></li>
-            </ol>
-            <p style="margin-top: 15px;"><em>You only need to do this once. After the first launch, you can open it normally.</em></p>
+            <h3>🔒 macOS Installation Instructions</h3>
+            <p style="margin-bottom: 15px;">When you first try to open the app, macOS will show this security warning:</p>
+
+            <div style="text-align: center; margin: 20px 0; background: white; padding: 20px; border-radius: 10px;">
+                <img src="macos-gatekeeper.png" alt="macOS Gatekeeper Warning" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            </div>
+
+            <div style="background: #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <p style="margin-bottom: 10px; font-size: 1.1em; font-weight: 600;">What to do:</p>
+                <ol style="font-weight: 500;">
+                    <li><strong>DO NOT</strong> click "Move to Trash"</li>
+                    <li>Click <strong>"Open Anyway"</strong> (the middle button)</li>
+                    <li>The app will open and macOS will remember it's safe</li>
+                </ol>
+            </div>
+
+            <p style="margin-top: 15px;"><strong>Why does this happen?</strong> This app is not signed with an Apple Developer certificate. It's completely safe and open source - you can review the entire code on <a href="https://github.com/juanmanuelferrera/vedabase-app" target="_blank" style="color: #856404; text-decoration: underline; font-weight: 600;">GitHub</a>.</p>
         </div>
 
         <div class="features">

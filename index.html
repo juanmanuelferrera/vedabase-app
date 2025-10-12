@@ -55,28 +55,49 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             padding: 40px;
-            margin: 10px auto 40px;
+            margin: 40px auto;
             max-width: 900px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .download-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 18px 40px;
-            border-radius: 30px;
+            background: linear-gradient(135deg, #fbbf24 0%, #fcd34d 100%);
+            color: #78350f;
+            padding: 22px 50px;
+            border-radius: 35px;
             text-decoration: none;
-            font-size: 1.3em;
-            font-weight: 600;
+            font-size: 1.5em;
+            font-weight: 800;
             margin: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+            transition: all 0.3s ease;
+            box-shadow:
+                0 8px 25px rgba(245, 158, 11, 0.4),
+                0 15px 50px rgba(245, 158, 11, 0.3),
+                inset 0 -4px 8px rgba(180, 83, 9, 0.2),
+                inset 0 2px 2px rgba(255, 255, 255, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            position: relative;
+            cursor: pointer;
         }
 
         .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow:
+                0 12px 35px rgba(245, 158, 11, 0.6),
+                0 20px 65px rgba(245, 158, 11, 0.5),
+                inset 0 -4px 8px rgba(180, 83, 9, 0.15),
+                inset 0 2px 2px rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, #fcd34d 0%, #fde68a 100%);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .download-btn:active {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow:
+                0 5px 15px rgba(245, 158, 11, 0.5),
+                inset 0 2px 8px rgba(180, 83, 9, 0.3);
         }
 
         .version {
@@ -235,56 +256,63 @@
 <body>
     <header>
         <h1>Vedabase - Original</h1>
-        <p class="tagline">A powerful desktop application for reading and studying the original, unchanged, unabridged works by A. C. Bhaktivedanta Swami Prabhupada</p>
+        <p class="tagline">A desktop application for OFFLINE research of the original works<br>by A. C. Bhaktivedanta Swami Prabhupada</p>
     </header>
 
     <div class="container">
         <div class="video-showcase">
             <video controls autoplay muted loop playsinline>
-                <source src="vedabase-showcase.mov" type="video/mp4">
+                <source src="vedabase-showcase-new.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
 
         <div class="download-section">
-            <h2 style="text-align: center; color: white; margin-bottom: 20px;">Download for macOS</h2>
-            <div style="text-align: center;">
-                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/Vedabase/Vedabase.zip" class="download-btn">📥 Download Vedabase.app</a>
-                <p class="version" style="color: rgba(255, 255, 255, 0.9);">Version 1.3.0 • macOS 10.13+ • 28 MB</p>
+            <h2 style="text-align: center; color: white; margin-bottom: 10px; font-size: 2em;">Download Vedabase</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.8); font-size: 1.1em; margin-bottom: 30px;">Version 1.4.5</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start;">
+                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.4.5/Vedabase_1.4.5_x64-setup.exe" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 12px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" style="width: 32px; height: 32px;"><path fill="#00ADEF" d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+                        <span>Windows</span>
+                    </a>
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9em; margin-top: 12px;">Windows 10+ • 25 MB</p>
+                </div>
+                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.4.5/Vedabase_1.4.5_aarch64.dmg" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 12px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" style="width: 32px; height: 32px;"><path fill="#ffffff" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                        <span>macOS</span>
+                    </a>
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9em; margin-top: 12px;">macOS 10.13+ • 18 MB</p>
+                </div>
+                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.4.5/Vedabase_1.4.5_amd64.deb" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 12px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" style="width: 32px; height: 32px;"><path fill="#000000" d="M20.581 19.049c-.55-.446-.336-1.431-.907-1.917.553-3.365-.997-6.331-2.845-8.232-1.551-1.595-1.051-3.147-1.051-4.49 0-2.146-.881-4.41-3.55-4.41-2.853 0-3.635 2.38-3.663 3.738-.068 3.262.659 4.11-1.25 6.484-2.246 2.793-2.577 5.579-2.07 7.057-.237.276-.557.582-1.155.835-1.652.72-.441 1.925-.898 2.78-.13.243-.192.497-.192.74 0 .75.596 1.399 1.679 1.302 1.461-.13 2.809.905 3.681.905.77 0 1.402-.438 1.696-1.041 1.377-.339 3.077-.296 4.453.059.247.691.917 1.141 1.662 1.141 1.631 0 1.945-1.849 3.816-2.475.674-.225 1.013-.879 1.013-1.488 0-.39-.139-.761-.419-.988zM11.507 4.602c.641 0 1.127.516 1.127 1.152s-.486 1.144-1.127 1.144c-.632 0-1.135-.508-1.135-1.144s.503-1.152 1.135-1.152zm-2.186 7.527c-.574 0-1.04-.505-1.04-1.126 0-.632.466-1.144 1.04-1.144.583 0 1.051.512 1.051 1.144 0 .621-.468 1.126-1.051 1.126zm4.357 7.671c-.347.341-.857.538-1.387.538s-1.031-.197-1.387-.538c-.363-.351-.569-.855-.569-1.377 0-.523.206-1.027.569-1.377.356-.341.857-.538 1.387-.538s1.04.197 1.387.538c.363.35.569.854.569 1.377 0 .522-.206 1.026-.569 1.377zm1.998-7.671c-.583 0-1.051-.505-1.051-1.126 0-.632.468-1.144 1.051-1.144.574 0 1.04.512 1.04 1.144 0 .621-.466 1.126-1.04 1.126z"/></svg>
+                        <span>Linux</span>
+                    </a>
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9em; margin-top: 12px;">Ubuntu 20.04+ • 22 MB</p>
+                </div>
             </div>
         </div>
 
         <div class="gatekeeper-notice">
-            <h3>🔒 macOS Gatekeeper Notice</h3>
-            <p style="margin-bottom: 15px;">Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.</p>
+            <h3>🔒 macOS Installation Instructions</h3>
+            <p style="margin-bottom: 15px;">When you first try to open the app, macOS will show this security warning:</p>
 
-            <p><strong>Installation steps:</strong></p>
-            <ol>
-                <li>Unzip the downloaded <strong>Vedabase.app.zip</strong> file</li>
-                <li>Move <strong>Vedabase.app</strong> to your <strong>Applications</strong> folder</li>
-            </ol>
+            <div style="text-align: center; margin: 20px 0; background: white; padding: 20px; border-radius: 10px;">
+                <img src="macos-gatekeeper.png" alt="macOS Gatekeeper Warning" style="max-width: 200px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            </div>
 
-            <p style="margin-top: 15px;"><strong>Method 1: System Settings (older macOS versions)</strong></p>
-            <ol>
-                <li>Try to open the app (it will be blocked)</li>
-                <li>Open <strong>System Settings → Privacy & Security</strong></li>
-                <li>Scroll down and click <strong>"Open Anyway"</strong></li>
-                <li>Confirm by clicking <strong>"Open"</strong></li>
-            </ol>
+            <div style="background: #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <p style="margin-bottom: 10px; font-size: 1.1em; font-weight: 600;">What to do:</p>
+                <ol style="font-weight: 500;">
+                    <li><strong>DO NOT</strong> click "Move to Trash"</li>
+                    <li>Click <strong>"Open Anyway"</strong> (the middle button)</li>
+                    <li>The app will open and macOS will remember it's safe</li>
+                </ol>
+            </div>
 
-            <p style="margin-top: 15px;"><strong>Method 2: Terminal (macOS Tahoe and newer)</strong></p>
-            <ol>
-                <li>Open <strong>Terminal</strong> (press <strong>⌘+Space</strong>, type "Terminal", press Enter)</li>
-                <li>Run this command: <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 3px;">xattr -cr /Applications/Vedabase.app</code></li>
-                <li>Open the app normally</li>
-            </ol>
-
-            <p style="margin-top: 15px;"><em>You only need to do this once. After the first launch, you can open it normally.</em></p>
-        </div>
-
-        <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 30px; margin: 40px auto; max-width: 900px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); text-align: center; color: white;">
-            <h3 style="font-size: 1.4em; margin-bottom: 15px; font-weight: 600;">🚀 Coming in Future Releases</h3>
-            <p style="font-size: 1.05em; opacity: 0.95; max-width: 700px; margin: 0 auto;">New features and additional material including Srila Prabhupada's letters will be added in upcoming releases. Stay tuned for updates!</p>
+            <p style="margin-top: 15px;"><strong>Why does this happen?</strong> This app is not signed with an Apple Developer certificate. It's completely safe and open source - you can review the entire code on <a href="https://github.com/juanmanuelferrera/vedabase-app" target="_blank" style="color: #856404; text-decoration: underline; font-weight: 600;">GitHub</a>.</p>
         </div>
 
         <div class="features">
