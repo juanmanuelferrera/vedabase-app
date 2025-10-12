@@ -1,6 +1,6 @@
 {
   "productName": "Vedabase",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "identifier": "com.bhagavadgita.vedabase",
   "build": {
     "beforeDevCommand": "",
