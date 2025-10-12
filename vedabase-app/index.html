@@ -891,7 +891,6 @@
                         textNode.parentNode.replaceChild(span, textNode);
                     });
 
-                    console.log('Applied search highlighting to frame');
                 } catch (e) {
                     console.error('Error applying search to frame:', e);
                 }
@@ -1517,7 +1516,6 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            console.log(`✓ Exported ${allSearchResults.length} search results`);
         };
 
         // Bookmarks System
@@ -1549,7 +1547,6 @@
                 bookmarks.unshift(bookmark);
                 localStorage.setItem('vedabaseBookmarks', JSON.stringify(bookmarks));
 
-                console.log('✓ Bookmark saved');
                 return true;
             } catch (e) {
                 console.error('Error saving bookmark:', e);
@@ -1564,7 +1561,6 @@
                 bookmarks.splice(index, 1);
                 localStorage.setItem('vedabaseBookmarks', JSON.stringify(bookmarks));
                 showBookmarks(); // Refresh the display
-                console.log('✓ Bookmark deleted');
             } catch (e) {
                 console.error('Error deleting bookmark:', e);
             }
@@ -1695,7 +1691,6 @@
                         const iframeDoc = contentFrame.contentWindow.document;
                         iframeDoc.documentElement.scrollTop = progress.scrollPosition;
                         iframeDoc.body.scrollTop = progress.scrollPosition;
-                        console.log('✓ Restored reading position');
                     } catch (e) {
                         console.error('Error restoring scroll position:', e);
                     }
@@ -1928,23 +1923,15 @@
         statsBtn.addEventListener('click', showStats);
 
         // Add bookmark at current location
-        console.log('DEBUG: addBookmarkBtn =', addBookmarkBtn);
         if (addBookmarkBtn) {
-            console.log('DEBUG: Attaching click listener to bookmark button');
             addBookmarkBtn.addEventListener('click', () => {
-                console.log('DEBUG: Bookmark button clicked!');
                 try {
-                    console.log('DEBUG: contentFrame =', contentFrame);
-                    console.log('DEBUG: Trying to access iframe document...');
                     const iframeDoc = contentFrame.contentWindow.document;
-                    console.log('DEBUG: Got iframe document', iframeDoc);
 
                     // Get current scroll position and find nearest heading
                     const scrollY = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
-                    console.log('DEBUG: Scroll position:', scrollY);
 
                     const headings = iframeDoc.querySelectorAll('h2[id], h3[id], h4[id], h5[id], h6[id]');
-                    console.log('DEBUG: Found', headings.length, 'headings');
 
                     let nearestHeading = null;
                     let minDistance = Infinity;
@@ -1961,12 +1948,9 @@
                     });
 
                     if (!nearestHeading) {
-                        console.log('DEBUG: No nearest heading found!');
                         alert('Could not determine current location. Please scroll to a section heading.');
                         return;
                     }
-
-                    console.log('DEBUG: Found nearest heading:', nearestHeading.textContent.trim());
 
                     // Show custom note dialog
                     const noteDialog = document.getElementById('note-dialog');
@@ -1984,7 +1968,6 @@
                     // Handle save button click
                     const handleSave = () => {
                         const note = noteInput.value.trim();
-                        console.log('DEBUG: User entered note:', note);
 
                         const bookmark = {
                             source: bookNames[currentSrc],
@@ -1995,9 +1978,7 @@
                             note: note
                         };
 
-                        console.log('DEBUG: Bookmark object created:', bookmark);
                         const saveResult = saveBookmark(bookmark);
-                        console.log('DEBUG: saveBookmark returned:', saveResult);
 
                         if (saveResult) {
                             // Show success message
@@ -2019,7 +2000,6 @@
 
                     // Handle cancel button click
                     const handleCancel = () => {
-                        console.log('DEBUG: User cancelled bookmark');
                         noteDialog.style.display = 'none';
                         noteSaveBtn.removeEventListener('click', handleSave);
                         noteCancelBtn.removeEventListener('click', handleCancel);
@@ -2044,8 +2024,6 @@
                     alert('Error adding bookmark: ' + e.message);
                 }
             });
-        } else {
-            console.error('DEBUG ERROR: Bookmark button NOT found!');
         }
 
         // Store current search query and result info globally
@@ -2073,38 +2051,30 @@
 
         // Helper function to expand TOC to show a specific heading
         function expandTOCToElement(doc, headingId) {
-            console.log('expandTOCToElement called with headingId:', headingId);
             if (!headingId) {
-                console.log('No headingId provided');
                 return;
             }
 
             try {
                 const toc = doc.getElementById('text-table-of-contents');
                 if (!toc) {
-                    console.log('TOC element not found');
                     return;
                 }
 
                 // Find the TOC link for this heading
                 const tocLink = toc.querySelector(`a[href="#${headingId}"]`);
-                console.log('Looking for TOC link with href:', `#${headingId}`, 'Found:', !!tocLink);
                 if (!tocLink) {
-                    console.log('TOC link not found for heading:', headingId);
                     return;
                 }
 
                 // Get the list item containing this link
                 let tocItem = tocLink.parentElement;
-                console.log('TOC item:', tocItem, 'Tag:', tocItem?.tagName);
                 if (!tocItem || tocItem.tagName !== 'LI') {
-                    console.log('TOC item is not an LI element');
                     return;
                 }
 
                 // First, collapse all TOC items to reset state
                 const allItems = toc.querySelectorAll('li.expanded');
-                console.log('Collapsing', allItems.length, 'expanded items');
                 allItems.forEach(item => item.classList.remove('expanded'));
 
                 // Remove any existing active highlighting
@@ -2113,11 +2083,8 @@
 
                 // Now expand all parent items up to the root
                 let currentItem = tocItem;
-                let expandedCount = 0;
                 while (currentItem && currentItem.tagName === 'LI') {
-                    console.log('Expanding item:', currentItem);
                     currentItem.classList.add('expanded');
-                    expandedCount++;
 
                     // Move to parent LI (skip UL)
                     const parentUL = currentItem.parentElement;
@@ -2127,25 +2094,21 @@
                         break;
                     }
                 }
-                console.log('Expanded', expandedCount, 'items in hierarchy');
 
                 // Highlight the current link
                 tocLink.classList.add('toc-active');
-                console.log('Added toc-active class to link');
 
                 // Scroll TOC to show the active item
                 setTimeout(() => {
                     tocLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    console.log('Scrolled to TOC item');
                 }, 200);
 
             } catch (e) {
-                console.log('Could not expand TOC:', e);
+                console.error('Could not expand TOC:', e);
             }
         }
 
         window.openResult = function(sourcePath, headingId, displayHeading, occurrenceIndex, resultIndex) {
-            console.log('openResult called:', { sourcePath, headingId, occurrenceIndex, currentSearchQuery });
             searchResults.classList.add('hidden');
             contentFrame.classList.remove('hidden');
 
@@ -2168,19 +2131,12 @@
                 try {
                     const iframeDoc = contentFrame.contentWindow.document;
 
-                    console.log('highlightAndScroll called with:', {
-                        currentSearchQuery,
-                        currentOccurrenceIndex,
-                        currentHeadingId
-                    });
-
                     // First, find the Nth occurrence BEFORE removing highlights
                     // This ensures we're counting on the original unmodified DOM
                     let targetElement = null;
                     let foundOccurrence = 0;
 
                     if (currentSearchQuery && currentOccurrenceIndex) {
-                        console.log('Searching for occurrence:', currentOccurrenceIndex, 'of query:', currentSearchQuery);
                         const escapedQuery = currentSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                         const wholeWord = document.getElementById('whole-word-search').checked;
                         const caseSensitive = document.getElementById('case-sensitive-search').checked;
@@ -2189,14 +2145,11 @@
                             ? new RegExp(`\\b${escapedQuery}\\b`, regexFlags)
                             : new RegExp(escapedQuery, regexFlags);
 
-                        console.log('Using regex:', regex);
-
                         // Count by paragraphs and headings (same as during search)
                         const content = iframeDoc.getElementById('content');
                         if (content) {
                             // Get fresh elements each time (not affected by previous highlights)
                             const elements = content.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
-                            console.log('Total elements to search:', elements.length);
 
                             for (let el of elements) {
                                 // Get the raw text content (strips any highlight markup)
@@ -2205,19 +2158,13 @@
                                 // Check if this element's text contains our search term
                                 if (regex.test(textContent)) {
                                     foundOccurrence++;
-                                    console.log(`Found occurrence #${foundOccurrence} in element:`, el.tagName, textContent.substring(0, 100));
 
                                     // Is this the occurrence we're looking for?
                                     if (foundOccurrence === currentOccurrenceIndex) {
                                         targetElement = el;
-                                        console.log('Target element found!', el);
                                         break;
                                     }
                                 }
-                            }
-
-                            if (!targetElement) {
-                                console.log(`Could not find occurrence #${currentOccurrenceIndex}, only found ${foundOccurrence} total`);
                             }
                         }
                     }
@@ -2310,13 +2257,11 @@
                         }
                     }, 300);
                 } catch (e) {
-                    console.log('Could not highlight or scroll:', e);
                 }
             };
 
             // Switch to the correct book if needed
             if (sourcePath !== currentSrc) {
-                console.log(`Switching from ${currentSrc} to ${sourcePath}`);
 
                 // Find the button or dropdown item for the target book
                 let buttonFound = false;
@@ -2337,7 +2282,6 @@
 
                         // Set up ONE onload handler that waits for the book to fully load
                         contentFrame.onload = function() {
-                            console.log('Book loaded, waiting for DOM to stabilize...');
 
                             // Wait for DOM to be ready
                             const waitForStableDOM = () => {
@@ -2358,11 +2302,9 @@
                                         return;
                                     }
 
-                                    console.log(`DOM ready with ${elementCount} elements. Waiting 2s for complete stability...`);
 
                                     // Wait for everything to fully render
                                     setTimeout(() => {
-                                        console.log('Book fully loaded. Showing iframe...');
 
                                         // Show the iframe first
                                         loading.classList.add('hidden');
@@ -2377,10 +2319,6 @@
 
                                         // NOW perform the search on the fully loaded and visible book
                                         setTimeout(() => {
-                                            console.log('Now applying search...');
-                                            console.log('Search query:', currentSearchQuery);
-                                            console.log('Occurrence index:', currentOccurrenceIndex);
-                                            console.log('Heading ID:', currentHeadingId);
 
                                             try {
                                                 highlightAndScroll();
@@ -2400,7 +2338,6 @@
                         };
 
                         // Now trigger the book load
-                        console.log('Loading book:', sourcePath);
                         contentFrame.src = sourcePath;
                     }
                 });
@@ -2422,7 +2359,6 @@
 
                             // Set up ONE onload handler that waits for the book to fully load
                             contentFrame.onload = function() {
-                                console.log('Book loaded, waiting for DOM to stabilize...');
 
                                 // Wait for DOM to be ready
                                 const waitForStableDOM = () => {
@@ -2443,11 +2379,9 @@
                                             return;
                                         }
 
-                                        console.log(`DOM ready with ${elementCount} elements. Waiting 2s for complete stability...`);
 
                                         // Wait for everything to fully render
                                         setTimeout(() => {
-                                            console.log('Book fully loaded. Showing iframe...');
 
                                             // Show the iframe first
                                             loading.classList.add('hidden');
@@ -2462,10 +2396,6 @@
 
                                             // NOW perform the search on the fully loaded and visible book
                                             setTimeout(() => {
-                                                console.log('Now applying search...');
-                                                console.log('Search query:', currentSearchQuery);
-                                                console.log('Occurrence index:', currentOccurrenceIndex);
-                                                console.log('Heading ID:', currentHeadingId);
 
                                                 try {
                                                     highlightAndScroll();
@@ -2485,18 +2415,15 @@
                             };
 
                             // Now trigger the book load
-                            console.log('Loading book from dropdown item:', sourcePath);
                             contentFrame.src = sourcePath;
                         }
                     });
                 }
 
                 if (!buttonFound) {
-                    console.log('Button or dropdown item not found for:', sourcePath);
                 }
             } else {
                 // Same book, just apply search
-                console.log('Same book, applying search directly');
                 highlightAndScroll();
             }
         };
@@ -2556,7 +2483,6 @@
             currentResultIndex = (currentResultIndex - 1 + allSearchResults.length) % allSearchResults.length;
             const prevResult = allSearchResults[currentResultIndex];
 
-            console.log(`Moving to result ${currentResultIndex + 1} of ${allSearchResults.length}`);
             updateResultCounter();
 
             // Open the previous result
@@ -2577,7 +2503,6 @@
             currentResultIndex = (currentResultIndex + 1) % allSearchResults.length;
             const nextResult = allSearchResults[currentResultIndex];
 
-            console.log(`Moving to result ${currentResultIndex + 1} of ${allSearchResults.length}`);
             updateResultCounter();
 
             // Open the next result
