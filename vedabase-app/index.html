@@ -1730,7 +1730,113 @@
         // Load progress when iframe loads
         contentFrame.addEventListener('load', () => {
             setTimeout(loadReadingProgress, 1000);
+
+            // Set up TOC click interception for cross-file navigation
+            setTimeout(() => {
+                try {
+                    const iframeDoc = contentFrame.contentWindow.document;
+                    const toc = iframeDoc.getElementById('text-table-of-contents');
+
+                    if (toc) {
+                        // Intercept all TOC link clicks
+                        toc.addEventListener('click', async (e) => {
+                            const link = e.target.closest('a');
+                            if (!link || !link.hash) return;
+
+                            const targetId = link.hash.substring(1); // Remove '#'
+
+                            // Check if the target exists in current document
+                            const targetElement = iframeDoc.getElementById(targetId);
+
+                            if (!targetElement) {
+                                // Target doesn't exist in current file, need to switch files
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                // Determine which file contains this heading
+                                const targetFile = await findFileForHeading(targetId);
+
+                                if (targetFile && targetFile !== currentSrc) {
+                                    // Switch to the file and navigate to heading
+                                    currentHeadingId = targetId;
+                                    window.openResult(targetFile, targetId, '', null);
+                                }
+                            }
+                        }, true); // Use capture phase
+                    }
+                } catch (e) {
+                    console.error('Error setting up TOC navigation:', e);
+                }
+            }, 500);
         });
+
+        // Helper function to determine which file contains a heading ID
+        async function findFileForHeading(headingId) {
+            // For Srimad Bhagavatam
+            if (currentSrc.includes('sb')) {
+                const sbFiles = [
+                    'vedabase-source/sb1.html',
+                    'vedabase-source/sb2.html',
+                    'vedabase-source/sb3.html'
+                ];
+
+                // Try to find the heading in other files
+                for (const file of sbFiles) {
+                    if (file === currentSrc) continue; // Skip current file
+
+                    // Quick check: fetch just the first part of the file to see if heading exists
+                    try {
+                        const response = await fetch(file);
+                        const text = await response.text();
+                        if (text.includes(`id="${headingId}"`)) {
+                            return file;
+                        }
+                    } catch (e) {
+                        console.error(`Error checking ${file}:`, e);
+                    }
+                }
+
+                // If not found, try next file in sequence
+                const currentIndex = sbFiles.indexOf(currentSrc);
+                if (currentIndex >= 0 && currentIndex < sbFiles.length - 1) {
+                    return sbFiles[currentIndex + 1];
+                }
+                return sbFiles[0]; // Fallback to first file
+            }
+
+            // For Caitanya Caritamrta
+            if (currentSrc.includes('cc')) {
+                const ccFiles = [
+                    'vedabase-source/cc1.html',
+                    'vedabase-source/cc2.html',
+                    'vedabase-source/cc3.html'
+                ];
+
+                // Try to find the heading in other files
+                for (const file of ccFiles) {
+                    if (file === currentSrc) continue;
+
+                    try {
+                        const response = await fetch(file);
+                        const text = await response.text();
+                        if (text.includes(`id="${headingId}"`)) {
+                            return file;
+                        }
+                    } catch (e) {
+                        console.error(`Error checking ${file}:`, e);
+                    }
+                }
+
+                // If not found, try next file in sequence
+                const currentIndex = ccFiles.indexOf(currentSrc);
+                if (currentIndex >= 0 && currentIndex < ccFiles.length - 1) {
+                    return ccFiles[currentIndex + 1];
+                }
+                return ccFiles[0];
+            }
+
+            return null;
+        }
 
         // Reading Statistics
         function getStats() {
