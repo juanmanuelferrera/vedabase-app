@@ -56,26 +56,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Mac Tauri app (ad-hoc signed)
-        run: npm run tauri:build -- --bundles app
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ""
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
-
-      - name: Create DMG with proper method
-        run: |
-          cd src-tauri/target/release/bundle/macos
-          hdiutil create -srcfolder Vedabase.app -volname "Vedabase" -fs HFS+ -format UDRW temp.dmg
-          hdiutil convert temp.dmg -format UDZO -o ../dmg/Vedabase_*.dmg
-          rm temp.dmg
+      - name: Build Mac Tauri app
+        run: npm run tauri:build -- --bundles dmg
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: tauri-mac-builds
-          path: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/macos/*.app
+          path: src-tauri/target/release/bundle/dmg/*.dmg
 
   build-tauri-linux:
     runs-on: ubuntu-latest
