@@ -250,25 +250,32 @@
             <h2 style="text-align: center; color: white; margin-bottom: 30px; font-size: 2em;">Download Vedabase</h2>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start;">
                 <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.4.0/Vedabase_1.4.0_x64-setup.exe" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_x64-setup.exe" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
                         <span style="font-size: 1.5em;">🪟</span>
                         <span>Windows</span>
                     </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.4.0 • Windows 10+</p>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • Windows 10+</p>
                 </div>
                 <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.4.0/Vedabase_1.4.0_aarch64.dmg" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_aarch64.dmg" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
                         <span style="font-size: 1.5em;">🍎</span>
-                        <span>macOS</span>
+                        <span>macOS (Apple Silicon)</span>
                     </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.4.0 • macOS 10.13+</p>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • M1/M2/M3/M4</p>
                 </div>
                 <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.4.0/Vedabase_1.4.0_amd64.deb" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_x64.dmg" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5em;">🍎</span>
+                        <span>macOS (Intel)</span>
+                    </a>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • Intel Macs</p>
+                </div>
+                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
+                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_amd64.deb" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
                         <span style="font-size: 1.5em;">🐧</span>
                         <span>Linux</span>
                     </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.4.0 • Ubuntu 20.04+</p>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • Ubuntu 20.04+</p>
                 </div>
             </div>
         </div>
@@ -288,6 +295,15 @@
                     <li>Click <strong>"Open Anyway"</strong> (the middle button)</li>
                     <li>The app will open and macOS will remember it's safe</li>
                 </ol>
+            </div>
+
+            <div style="background: #fff8e1; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #ffc107;">
+                <p style="margin-bottom: 10px; font-size: 1.1em; font-weight: 600;">Alternative: Terminal command</p>
+                <p style="margin-bottom: 10px;">If the above doesn't work, open <strong>Terminal</strong> and run:</p>
+                <div style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.95em; overflow-x: auto;">
+                    xattr -cr /Applications/Vedabase.app
+                </div>
+                <p style="margin-top: 10px; font-size: 0.9em;">This removes the quarantine flag that macOS adds to downloaded apps. Then open Vedabase normally.</p>
             </div>
 
             <p style="margin-top: 15px;"><strong>Why does this happen?</strong> This app is not signed with an Apple Developer certificate. It's completely safe and open source - you can review the entire code on <a href="https://github.com/juanmanuelferrera/vedabase-app" target="_blank" style="color: #856404; text-decoration: underline; font-weight: 600;">GitHub</a>.</p>
