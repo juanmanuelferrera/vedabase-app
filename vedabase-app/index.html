@@ -230,10 +230,33 @@
         body.dark-mode .search-result-item:hover {
             background: #1a1a1a;
         }
-        body.dark-mode input, body.dark-mode button:not(#dark-mode-toggle):not(#prev-result-btn):not(#next-result-btn) {
+        body.dark-mode input {
             background: #1a1a1a;
             color: #ffffff;
             border-color: #2a2a2a;
+        }
+        body.dark-mode #search-btn,
+        body.dark-mode #search-all-btn {
+            background: transparent;
+            color: #d6d3d1;
+            border-color: #44403c;
+        }
+        body.dark-mode #search-btn:hover,
+        body.dark-mode #search-all-btn:hover {
+            background: #1a1a1a;
+        }
+        body.dark-mode #bookmarks-btn,
+        body.dark-mode #stats-btn,
+        body.dark-mode #dark-mode-toggle {
+            background: transparent;
+            color: #a8a29e;
+            border-color: #44403c;
+        }
+        body.dark-mode #bookmarks-btn:hover,
+        body.dark-mode #stats-btn:hover,
+        body.dark-mode #dark-mode-toggle:hover {
+            background: #1a1a1a;
+            color: #e7e5e4;
         }
         body.dark-mode label span {
             color: #e5e7eb;
@@ -313,7 +336,7 @@
                 <h1 class="text-3xl font-sanskrit text-orange-600">
                     Vedabase - Original Books
                 </h1>
-                <span class="text-xs font-mono text-gray-400 px-2 py-1 rounded-full border border-gray-200" style="font-size: 0.65rem; opacity: 0.6;">v1.4.0</span>
+                <span class="text-xs font-mono text-gray-400 px-2 py-1 rounded-full border border-gray-200" style="font-size: 0.65rem; opacity: 0.6;">v1.5.0</span>
             </div>
             <!-- Search Bar -->
             <div class="mt-4">
@@ -322,25 +345,25 @@
                         <input
                             type="text"
                             id="search-input"
-                            placeholder="Search in current book or all books..."
+                            placeholder="Search... (use + for AND, OR for either)"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                         <div id="search-history-dropdown" class="hidden"></div>
                     </div>
-                    <button id="search-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
+                    <button id="search-btn" class="px-5 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-100 transition text-sm font-medium tracking-wide">
                         Search Current
                     </button>
-                    <button id="search-all-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    <button id="search-all-btn" class="px-5 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-100 transition text-sm font-medium tracking-wide">
                         Search All
                     </button>
-                    <button id="bookmarks-btn" class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition" title="View bookmarks">
-                        🔖 Bookmarks
+                    <button id="bookmarks-btn" class="px-3 py-2 border border-stone-200 text-stone-500 rounded-lg hover:bg-stone-100 hover:text-stone-700 transition" title="Bookmarks">
+                        🔖
                     </button>
-                    <button id="stats-btn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition" title="View reading statistics">
-                        📊 Stats
+                    <button id="stats-btn" class="px-3 py-2 border border-stone-200 text-stone-500 rounded-lg hover:bg-stone-100 hover:text-stone-700 transition" title="Reading statistics">
+                        📊
                     </button>
-                    <button id="dark-mode-toggle" class="px-4 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded-lg transition" title="Toggle dark mode">
-                        🌙 Dark Mode
+                    <button id="dark-mode-toggle" class="px-3 py-2 border border-stone-200 text-stone-500 rounded-lg hover:bg-stone-100 hover:text-stone-700 transition" title="Toggle dark mode">
+                        🌙
                     </button>
                 </div>
                 <div class="mt-2 flex items-center gap-4 flex-wrap">
@@ -461,7 +484,7 @@
     <div id="stats-panel" class="hidden"></div>
 
     <!-- Floating bookmark button (appears when reading) -->
-    <button id="add-bookmark-btn" style="display: none; position: fixed; bottom: 120px; right: 32px; padding: 12px 16px; background: #7c3aed; color: white; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; cursor: pointer; font-size: 16px; font-weight: 600; z-index: 100;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'" title="Add bookmark at current location">
+    <button id="add-bookmark-btn" style="display: none; position: fixed; bottom: 24px; right: 24px; padding: 10px 16px; background: #78716c; color: white; border-radius: 9999px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none; cursor: pointer; font-size: 14px; font-weight: 500; z-index: 100; opacity: 0.8; transition: opacity 0.2s, background 0.2s;" onmouseover="this.style.background='#57534e'; this.style.opacity='1'" onmouseout="this.style.background='#78716c'; this.style.opacity='0.8'" title="Add bookmark at current location">
         🔖 Add
     </button>
 
@@ -1183,6 +1206,26 @@
             currentIsRegex = useRegex; // Store regex mode globally
             currentIgnoreDiacritics = ignoreDiacritics; // Store for highlighting
             const queryForSearch = caseSensitive ? normalizedQuery : normalizedQuery.toLowerCase(); // Use this for searching
+
+            // Parse boolean operators: + (AND), OR
+            // "+human +being" or "human + being" = both must appear
+            // "human OR being" = either must appear
+            let booleanMode = null; // null = simple, 'AND', 'OR'
+            let booleanTerms = [];
+            if (!useRegex) {
+                // Check for +term +term syntax (prefix plus)
+                const prefixPlusMatch = queryForSearch.match(/^\+\S/);
+                if (prefixPlusMatch) {
+                    booleanMode = 'AND';
+                    booleanTerms = queryForSearch.split(/\s+/).map(t => t.replace(/^\+/, '').trim()).filter(t => t.length > 0);
+                } else if (queryForSearch.includes(' + ')) {
+                    booleanMode = 'AND';
+                    booleanTerms = queryForSearch.split(' + ').map(t => t.trim()).filter(t => t.length > 0);
+                } else if (/ or /i.test(query)) {
+                    booleanMode = 'OR';
+                    booleanTerms = queryForSearch.split(/ or /i).map(t => t.trim()).filter(t => t.length > 0);
+                }
+            }
             const results = [];
             const filesToSearch = searchAll
                 ? Object.keys(bookNames)
@@ -1225,15 +1268,28 @@
                         .then(html => {
                             // Use regex search instead of DOM parsing for speed
                             let searchRegex;
+                            let booleanRegexes = [];
+                            const regexFlags = caseSensitive ? 'g' : 'gi';
+
                             if (useRegex) {
-                                // Already validated, just clone with g flag
-                                const regexFlags = caseSensitive ? 'g' : 'gi';
                                 searchRegex = new RegExp(ignoreDiacritics ? stripDiacritics(query) : query, regexFlags);
+                            } else if (booleanMode) {
+                                // Build a regex for each boolean term (for highlighting)
+                                booleanRegexes = booleanTerms.map(term => {
+                                    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                    return wholeWordOnly
+                                        ? new RegExp('\\b' + escaped + '\\b', regexFlags)
+                                        : new RegExp(escaped, regexFlags);
+                                });
+                                // Combined regex for highlighting all terms
+                                const combined = booleanTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+                                searchRegex = wholeWordOnly
+                                    ? new RegExp('\\b(?:' + combined + ')\\b', regexFlags)
+                                    : new RegExp(combined, regexFlags);
                             } else {
                                 const escapedQuery = queryForSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                                const regexFlags = caseSensitive ? 'g' : 'gi';
                                 searchRegex = wholeWordOnly
-                                    ? new RegExp(`\\b${escapedQuery}\\b`, regexFlags)
+                                    ? new RegExp('\\b' + escapedQuery + '\\b', regexFlags)
                                     : new RegExp(escapedQuery, regexFlags);
                             }
 
@@ -1260,9 +1316,16 @@
                                 if (ignoreDiacritics) textToSearch = stripDiacritics(textToSearch);
 
                                 // Check if text matches query
-                                const hasMatch = useRegex || wholeWordOnly
-                                    ? searchRegex.test(textToSearch)
-                                    : textToSearch.includes(queryForSearch);
+                                let hasMatch;
+                                if (booleanMode === 'AND') {
+                                    hasMatch = booleanRegexes.every(rx => { rx.lastIndex = 0; return rx.test(textToSearch); });
+                                } else if (booleanMode === 'OR') {
+                                    hasMatch = booleanRegexes.some(rx => { rx.lastIndex = 0; return rx.test(textToSearch); });
+                                } else if (useRegex || wholeWordOnly) {
+                                    hasMatch = searchRegex.test(textToSearch);
+                                } else {
+                                    hasMatch = textToSearch.includes(queryForSearch);
+                                }
 
                                 // Reset regex for next iteration
                                 searchRegex.lastIndex = 0;

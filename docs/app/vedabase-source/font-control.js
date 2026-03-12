@@ -21,13 +21,15 @@
             }
 
             style.textContent = `
-                * {
-                    font-size: ${fontSize}px !important;
+                html { font-size: ${fontSize}px !important; }
+                #content p, #content li, #content dd, #content td, #content th,
+                #content blockquote, #content .verse, #content .example,
+                #content pre.src, #content code {
                     line-height: 1.8 !important;
                 }
             `;
 
-            console.log('✓ Font size applied:', fontSize);
+            console.log('Font size applied:', fontSize);
         }
 
         if (event.data.type === 'setDarkMode') {
@@ -45,19 +47,59 @@
             if (isDark) {
                 style.textContent = `
                     body {
-                        background: #000000 !important;
+                        background: #121212 !important;
                     }
-                    body, p, h1, h2, h3, h4, h5, h6, div, span, li, td, th, blockquote, pre, code, * {
-                        color: #ffffff !important;
+                    body, p, h1, h2, h3, h4, h5, h6, div, span, li, td, th, blockquote, pre, code, dd, dt, label, legend, .footpara, .timestamp {
+                        color: #e0e0e0 !important;
                     }
                     a {
-                        color: #60a5fa !important;
+                        color: #f59e0b !important;
+                    }
+                    a:visited {
+                        color: #d97706 !important;
+                    }
+                    #table-of-contents, .nav {
+                        background: #1a1a1a !important;
+                    }
+                    #copyright, #postamble {
+                        background: #1a1a1a !important;
+                    }
+                    table td, table th {
+                        background-color: #1e1e1e !important;
+                        border-color: #333 !important;
+                    }
+                    table tr:nth-child(2n-1) td {
+                        background-color: #1e1e1e !important;
+                    }
+                    table tr:nth-child(2n) td {
+                        background-color: #252525 !important;
+                    }
+                    blockquote, .verse {
+                        background-color: #1e1e1e !important;
+                        border-color: #444 !important;
+                    }
+                    .example, pre.src, .codeblock, #content .literal-block {
+                        background: #2d2d2d !important;
+                        border-color: #444 !important;
+                    }
+                    code {
+                        background: #2d2d2d !important;
+                        border-color: #444 !important;
+                    }
+                    #content {
+                        background: #121212 !important;
+                    }
+                    .note + div, #content .note, #content .seealso, .seealso + div {
+                        background: #1e1e1e !important;
+                    }
+                    .admonition-title + div {
+                        background: #1e1e1e !important;
                     }
                 `;
-                console.log('✓ Dark mode enabled');
+                console.log('Dark mode enabled');
             } else {
                 style.textContent = '';
-                console.log('✓ Dark mode disabled');
+                console.log('Dark mode disabled');
             }
         }
     });
