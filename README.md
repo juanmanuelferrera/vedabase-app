@@ -1,10 +1,22 @@
 # Vedabase - Original
 
-A desktop application for reading and studying the works by A. C. Bhaktivedanta Swami Prabhupada.
+A desktop application for reading and studying the complete works by A. C. Bhaktivedanta Swami Prabhupada.
+
+## Content
+
+- **Bhagavad-gita As It Is** (1972 edition)
+- **Srimad Bhagavatam** - all 12 cantos
+- **Caitanya Caritamrta** - Adi, Madhya, Antya lilas
+- **Krsna Book**
+- **21 other books** - Nectar of Devotion, Sri Isopanisad, Teachings of Lord Caitanya, and more
+- **Lectures** - hundreds of lectures from 1966-1976
+- **Conversations** - 1,009 morning walks, room conversations, and interviews (1967-1977)
+- **Letters** - 6,605 letters to disciples and others (1947-1977)
 
 ## Features
 
 - 🔍 **Full-text search** - Search through all text with instant highlighting
+- 🔤 **Diacritics-insensitive search** - Search "Krsna" to find "Kṛṣṇa"
 - 🎯 **Smart highlighting** - Visual emphasis on all search matches
 - ⏭️ **Navigate matches** - Jump between results with Previous/Next buttons
 - 🔎 **Advanced search** - Regex patterns and search-within-results filtering
