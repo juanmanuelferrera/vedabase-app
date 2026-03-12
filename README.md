@@ -1,56 +1,80 @@
 # Vedabase - Original
 
-A desktop application for reading and studying the complete works by A. C. Bhaktivedanta Swami Prabhupada.
+A desktop and web application for reading and studying the complete works of A. C. Bhaktivedanta Swami Prabhupada — original, unedited editions as originally published.
+
+**[Use Online](https://vedabase-app.pages.dev/app)** · **[Download Desktop App](https://github.com/juanmanuelferrera/vedabase-app/releases/latest)** · **[Landing Page](https://vedabase-app.pages.dev/)**
 
 ## Content
 
-- **Bhagavad-gita As It Is** (1972 edition)
-- **Srimad Bhagavatam** - all 12 cantos
-- **Caitanya Caritamrta** - Adi, Madhya, Antya lilas
+- **Bhagavad-gita As It Is** — 1972 original edition
+- **Srimad Bhagavatam** — all 12 cantos
+- **Caitanya Caritamrta** — Adi, Madhya, Antya lilas
 - **Krsna Book**
-- **21 other books** - Nectar of Devotion, Sri Isopanisad, Teachings of Lord Caitanya, and more
-- **Lectures** - hundreds of lectures from 1966-1976
-- **Conversations** - 1,009 morning walks, room conversations, and interviews (1967-1977)
-- **Letters** - 6,605 letters to disciples and others (1947-1977)
+- **21 other books** — Nectar of Devotion, Sri Isopanisad, Teachings of Lord Caitanya, and more
+- **Lectures** — hundreds of lectures from 1966–1976
+- **Conversations** — 1,009 morning walks, room conversations, and interviews (1967–1977)
+- **Letters** — 6,605 letters to disciples and others (1947–1977)
 
 ## Features
 
-- 🔍 **Full-text search** - Search through all text with instant highlighting
-- 🔤 **Diacritics-insensitive search** - Search "Krsna" to find "Kṛṣṇa"
-- 🎯 **Smart highlighting** - Visual emphasis on all search matches
-- ⏭️ **Navigate matches** - Jump between results with Previous/Next buttons
-- 🔎 **Advanced search** - Regex patterns and search-within-results filtering
-- 📑 **Cross-references** - Click verse references to jump instantly
-- 📝 **Personal notes** - Add, edit, and manage annotations on any verse
-- 🌓 **Dark mode** - True dark theme with white text on black background
-- 📖 **Interactive TOC** - One-click collapsible Table of Contents navigation
-- 🎨 **Font control** - Adjustable text size for comfortable reading
-- 💾 **Fully offline** - Standalone app with all content embedded, no internet needed
+- **Full-text search** with instant highlighting across all books
+- **Boolean search** — use `+` for AND, `OR` for either term
+- **Diacritics-insensitive search** — search "Krsna" to find "Kṛṣṇa"
+- **Regex search** for advanced pattern matching
+- **Search All** — search across every book at once
+- **Cross-references** — click verse references to jump instantly
+- **Bookmarks** — save and manage your reading positions
+- **Reading statistics** — track your study progress
+- **Interactive TOC** — collapsible Table of Contents navigation
+- **Dark mode** — warm dark theme for comfortable reading
+- **Font control** — adjustable text size
+- **Fully offline** — standalone desktop app with all content embedded
+
+## Download
+
+### Desktop App (v1.5.0)
+
+| Platform | Download |
+|----------|----------|
+| macOS (Apple Silicon) | [Vedabase_1.5.0_aarch64.dmg](https://github.com/juanmanuelferrera/vedabase-app/releases/latest) |
+| macOS (Intel) | [Vedabase_1.5.0_x64.dmg](https://github.com/juanmanuelferrera/vedabase-app/releases/latest) |
+| Windows | [Vedabase_1.5.0_x64-setup.exe](https://github.com/juanmanuelferrera/vedabase-app/releases/latest) |
+| Linux | [Vedabase_1.5.0_amd64.deb](https://github.com/juanmanuelferrera/vedabase-app/releases/latest) |
+
+### Online Version
+
+No installation needed — use the app directly in your browser at **[vedabase-app.pages.dev/app](https://vedabase-app.pages.dev/app)**.
 
 ## Installation
 
 ### macOS
 
-1. Download `Vedabase.app` from the releases
-2. Copy to `/Applications` or anywhere you prefer
-3. **First launch**: Right-click the app and select "Open" (see Gatekeeper note below)
+1. Download the `.dmg` for your Mac (Apple Silicon or Intel)
+2. Open the DMG and drag `Vedabase` to Applications
+3. **First launch**: Right-click the app and select "Open" (required for unsigned apps)
 4. Click "Open" in the security dialog
 
-#### macOS Gatekeeper Notice
+> **Gatekeeper note:** Since this app is not signed with an Apple Developer certificate, macOS will block it on first launch. Right-click → Open bypasses this. You only need to do this once.
 
-Since this app is not signed with an Apple Developer certificate, macOS Gatekeeper will block it on first launch. This is normal for unsigned apps.
+**Alternative:** Open Terminal and run:
+```
+xattr -cr /Applications/Vedabase.app
+```
 
-**To open the app:**
-1. Right-click (or Control-click) on `Vedabase.app`
-2. Select "Open" from the menu
-3. Click "Open" in the dialog that appears
+### Windows
 
-**Alternative method:**
-1. Try to open the app normally (it will be blocked)
-2. Go to System Preferences → Security & Privacy
-3. Click "Open Anyway" for Vedabase
+1. Download `Vedabase_1.5.0_x64-setup.exe`
+2. Run the installer
+3. If Windows Defender SmartScreen appears, click "More info" → "Run anyway"
 
-You only need to do this once. After the first launch, you can open it normally.
+### Linux
+
+1. Download `Vedabase_1.5.0_amd64.deb`
+2. Install: `sudo dpkg -i Vedabase_1.5.0_amd64.deb`
+
+## Tech Stack
+
+Built with [Tauri](https://tauri.app/) (Rust + WebView) for lightweight, native performance.
 
 ## Credits
 
