@@ -11,7 +11,8 @@
             font-family: 'Sanskrit Text', serif;
         }
         .tab-button {
-            padding: 1rem 1.5rem;
+            padding: 0.5rem 0.6rem;
+            font-size: 0.8rem;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
@@ -338,6 +339,9 @@
                     <button id="stats-btn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition" title="View reading statistics">
                         📊 Stats
                     </button>
+                    <button id="dark-mode-toggle" class="px-4 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded-lg transition" title="Toggle dark mode">
+                        🌙 Dark Mode
+                    </button>
                 </div>
                 <div class="mt-2 flex items-center gap-4 flex-wrap">
                     <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
@@ -352,9 +356,10 @@
                         <input type="checkbox" id="regex-search" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
                         <span>Use regex</span>
                     </label>
-                    <button id="dark-mode-toggle" class="ml-auto px-4 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded-lg transition" title="Toggle dark mode">
-                        🌙 Dark Mode
-                    </button>
+                    <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                        <input type="checkbox" id="ignore-diacritics" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500" checked>
+                        <span>Ignore diacritics</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -363,7 +368,7 @@
     <!-- Navigation Tabs -->
     <nav class="bg-white border-b border-gray-200 sticky top-[72px] z-40">
         <div class="container mx-auto px-6">
-            <div class="flex flex-wrap justify-center gap-2">
+            <div class="flex flex-nowrap justify-center gap-1">
                 <button class="tab-button active" data-src="vedabase-source/bg.html">
                     Bhagavad-gītā
                 </button>
@@ -371,7 +376,7 @@
                 <!-- Srimad Bhagavatam Dropdown -->
                 <div class="tab-dropdown">
                     <button class="tab-button">
-                        Śrīmad Bhāgavatam <span class="dropdown-arrow">▼</span>
+                        S. Bhāgavatam <span class="dropdown-arrow">▼</span>
                     </button>
                     <div class="dropdown-content">
                         <button class="dropdown-item" data-src="vedabase-source/sb1.html">Cantos 1-3</button>
@@ -383,7 +388,7 @@
                 <!-- Caitanya Caritamrta Dropdown -->
                 <div class="tab-dropdown">
                     <button class="tab-button">
-                        Caitanya Caritāmṛta <span class="dropdown-arrow">▼</span>
+                        C. Caritāmṛta <span class="dropdown-arrow">▼</span>
                     </button>
                     <div class="dropdown-content">
                         <button class="dropdown-item" data-src="vedabase-source/cc1.html">Ādi-līlā</button>
@@ -410,6 +415,31 @@
                         <button class="dropdown-item" data-src="vedabase-source/lec2a.html">Part 4</button>
                         <button class="dropdown-item" data-src="vedabase-source/lec2b.html">Part 5</button>
                         <button class="dropdown-item" data-src="vedabase-source/lec2c.html">Part 6</button>
+                    </div>
+                </div>
+
+                <!-- Conversations Dropdown -->
+                <div class="tab-dropdown">
+                    <button class="tab-button">
+                        Conversations <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <button class="dropdown-item" data-src="vedabase-source/conv1.html">1967-1973</button>
+                        <button class="dropdown-item" data-src="vedabase-source/conv2.html">1974-1975</button>
+                        <button class="dropdown-item" data-src="vedabase-source/conv3.html">1976-1977</button>
+                    </div>
+                </div>
+
+                <!-- Letters Dropdown -->
+                <div class="tab-dropdown">
+                    <button class="tab-button">
+                        Letters <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <button class="dropdown-item" data-src="vedabase-source/let1.html">1947-1968</button>
+                        <button class="dropdown-item" data-src="vedabase-source/let2.html">1969-1971</button>
+                        <button class="dropdown-item" data-src="vedabase-source/let3.html">1972-1974</button>
+                        <button class="dropdown-item" data-src="vedabase-source/let4.html">1975-1977</button>
                     </div>
                 </div>
             </div>
@@ -465,6 +495,25 @@
     </main>
 
     <script>
+        // Sanskrit diacritics normalization for search
+        function stripDiacritics(str) {
+            const map = {
+                'ā':'a','Ā':'A','ī':'i','Ī':'I','ū':'u','Ū':'U',
+                'ṛ':'r','Ṛ':'R','ṝ':'r','Ṝ':'R','ḷ':'l','Ḷ':'L',
+                'ṣ':'s','Ṣ':'S','ś':'s','Ś':'S','ṇ':'n','Ṇ':'N',
+                'ṅ':'n','Ṅ':'N','ñ':'n','Ñ':'N','ṁ':'m','Ṁ':'M',
+                'ṃ':'m','Ṃ':'M','ḥ':'h','Ḥ':'H','ṭ':'t','Ṭ':'T',
+                'ḍ':'d','Ḍ':'D','ṇ':'n','Ṇ':'N','ḻ':'l','Ḻ':'L',
+                'ṉ':'n','é':'e','è':'e','ê':'e','ë':'e',
+                'á':'a','à':'a','â':'a','ä':'a','å':'a',
+                'í':'i','ì':'i','î':'i','ï':'i',
+                'ó':'o','ò':'o','ô':'o','ö':'o',
+                'ú':'u','ù':'u','û':'u','ü':'u',
+                'ç':'c','Ç':'C'
+            };
+            return str.replace(/[^\x00-\x7F]/g, ch => map[ch] || ch);
+        }
+
         // Load dark mode preference (default: OFF)
         const savedDarkMode = localStorage.getItem('darkMode');
         if (savedDarkMode === 'true') {
@@ -1115,6 +1164,7 @@
             const caseSensitive = document.getElementById('case-sensitive-search').checked;
             const useRegex = document.getElementById('regex-search').checked;
             const wholeWordOnly = document.getElementById('whole-word-search').checked;
+            const ignoreDiacritics = document.getElementById('ignore-diacritics').checked;
 
             // Validate regex if useRegex is enabled
             let queryRegex;
@@ -1128,9 +1178,11 @@
                 }
             }
 
-            currentSearchQuery = caseSensitive ? query : query.toLowerCase(); // Store for highlighting
+            let normalizedQuery = ignoreDiacritics ? stripDiacritics(query) : query;
+            currentSearchQuery = caseSensitive ? normalizedQuery : normalizedQuery.toLowerCase(); // Store for highlighting
             currentIsRegex = useRegex; // Store regex mode globally
-            const queryForSearch = caseSensitive ? query : query.toLowerCase(); // Use this for searching
+            currentIgnoreDiacritics = ignoreDiacritics; // Store for highlighting
+            const queryForSearch = caseSensitive ? normalizedQuery : normalizedQuery.toLowerCase(); // Use this for searching
             const results = [];
             const filesToSearch = searchAll
                 ? Object.keys(bookNames)
@@ -1176,7 +1228,7 @@
                             if (useRegex) {
                                 // Already validated, just clone with g flag
                                 const regexFlags = caseSensitive ? 'g' : 'gi';
-                                searchRegex = new RegExp(query, regexFlags);
+                                searchRegex = new RegExp(ignoreDiacritics ? stripDiacritics(query) : query, regexFlags);
                             } else {
                                 const escapedQuery = queryForSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                                 const regexFlags = caseSensitive ? 'g' : 'gi';
@@ -1204,7 +1256,8 @@
 
                             while ((match = elementRegex.exec(content)) !== null && fileResults < MAX_RESULTS_PER_FILE && totalResults < MAX_TOTAL_RESULTS) {
                                 const text = match[2].replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, ' ');
-                                const textToSearch = caseSensitive ? text : text.toLowerCase();
+                                let textToSearch = caseSensitive ? text : text.toLowerCase();
+                                if (ignoreDiacritics) textToSearch = stripDiacritics(textToSearch);
 
                                 // Check if text matches query
                                 const hasMatch = useRegex || wholeWordOnly
@@ -2135,6 +2188,7 @@
         // Store current search query and result info globally
         let currentSearchQuery = '';
         let currentIsRegex = false;
+        let currentIgnoreDiacritics = true;
         let currentHeadingId = '';
         let currentOccurrenceIndex = 0;
 
