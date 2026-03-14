@@ -39,6 +39,19 @@ jobs:
       - name: Sync web assets to Android
         run: npx cap sync android
 
+      - name: Fix Kotlin duplicate classes
+        run: |
+          cat >> android/app/build.gradle << 'PATCH'
+
+          configurations.all {
+              resolutionStrategy {
+                  force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+                  force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24'
+                  force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24'
+              }
+          }
+          PATCH
+
       - name: Build APK
         working-directory: android
         run: |
