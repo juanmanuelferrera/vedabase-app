@@ -1,0 +1,8 @@
+{
+  "appId": "es.bhaktiyoga.vedabase",
+  "appName": "Vedabase",
+  "webDir": "vedabase-app",
+  "server": {
+    "androidScheme": "https"
+  }
+}
