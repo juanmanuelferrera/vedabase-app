@@ -95,7 +95,7 @@ jobs:
           path: src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
 
   build-tauri-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -116,7 +116,7 @@ jobs:
           npm ci
 
       - name: Build Linux Tauri app
-        run: npm run tauri:build -- --bundles deb
+        run: npm run tauri:build -- --bundles deb,appimage
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -124,6 +124,7 @@ jobs:
           name: tauri-linux-builds
           path: |
             src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/appimage/*.AppImage
 
   release:
     needs: [build-tauri-windows, build-tauri-mac-arm, build-tauri-mac-intel, build-tauri-linux]

@@ -9,7 +9,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["app", "dmg"],
+    "targets": ["app", "dmg", "deb", "appimage"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -25,7 +25,15 @@
     "longDescription": "A searchable collection of Vedic texts including Bhagavad-gita As It Is",
     "linux": {
       "deb": {
-        "depends": []
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "libayatana-appindicator3-1"
+        ],
+        "section": "utils"
+      },
+      "appimage": {
+        "bundleMediaFramework": true
       }
     },
     "macOS": {
