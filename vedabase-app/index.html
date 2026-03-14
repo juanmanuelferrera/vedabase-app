@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ea580c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Vedabase">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     <title>Vedabase - Original Books</title>
     <link href="https://fonts.googleapis.com/css2?family=Sanskrit+Text:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -282,6 +288,113 @@
         }
         body.dark-mode .search-history-clear:hover {
             background: #2a0a0a;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header .container {
+                padding: 0.5rem 0.75rem;
+            }
+            header h1 {
+                font-size: 1.25rem !important;
+            }
+            header .text-xs {
+                display: none;
+            }
+            /* Stack search bar */
+            header .flex.gap-2 {
+                flex-wrap: wrap;
+            }
+            header .search-input-wrapper {
+                flex: 1 1 100%;
+            }
+            #search-input {
+                font-size: 16px; /* prevents iOS zoom */
+                padding: 0.5rem 0.75rem;
+            }
+            #search-btn, #search-all-btn {
+                flex: 1;
+                padding: 0.5rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            #bookmarks-btn, #stats-btn, #dark-mode-toggle {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            /* Search options: smaller, wrap */
+            header .mt-2.flex {
+                gap: 0.5rem;
+                font-size: 0.75rem;
+            }
+            header .mt-2.flex span {
+                font-size: 0.75rem;
+            }
+            /* Tabs: horizontal scroll */
+            nav .container {
+                padding: 0 0.25rem;
+            }
+            nav .flex.flex-nowrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                justify-content: flex-start;
+                gap: 0;
+                padding-bottom: 2px;
+            }
+            nav .flex.flex-nowrap::-webkit-scrollbar {
+                display: none;
+            }
+            .tab-button {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.7rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            /* Nav sticky position adjustment */
+            nav.sticky {
+                position: sticky;
+                top: auto;
+            }
+            /* Content frame full height */
+            #content-frame {
+                height: calc(100vh - 200px);
+            }
+            /* Search results */
+            #search-results {
+                margin: 0.5rem;
+                max-height: 50vh;
+            }
+            .search-result-item {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+            /* Result counter */
+            #result-counter {
+                font-size: 0.75rem;
+                bottom: 0.5rem;
+                right: 0.5rem;
+            }
+            /* Dropdown wider on mobile */
+            .dropdown-content {
+                min-width: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.1rem !important;
+            }
+            #search-btn, #search-all-btn {
+                font-size: 0.65rem;
+                padding: 0.4rem 0.3rem;
+            }
+            .tab-button {
+                font-size: 0.65rem;
+                padding: 0.35rem 0.4rem;
+            }
+            #content-frame {
+                height: calc(100vh - 180px);
+            }
         }
 
         /* Print Styles */
@@ -2770,6 +2883,11 @@
                 resultIndex
             );
         });
+    </script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+    }
     </script>
 </body>
 </html>

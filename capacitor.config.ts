@@ -1,9 +1,12 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.bhagavadgita.app',
-  appName: 'Bhagavad Gita',
-  webDir: 'www'
+  appId: 'es.bhaktiyoga.vedabase',
+  appName: 'Vedabase',
+  webDir: 'vedabase-app',
+  server: {
+    androidScheme: 'https'
+  }
 };
 
 export default config;
