@@ -449,7 +449,7 @@
                 <h1 class="text-3xl font-sanskrit text-orange-600">
                     Vedabase - Original Books
                 </h1>
-                <span class="text-xs font-mono text-gray-400 px-2 py-1 rounded-full border border-gray-200" style="font-size: 0.65rem; opacity: 0.6;">v1.5.0</span>
+                <span class="text-xs font-mono text-gray-400 px-2 py-1 rounded-full border border-gray-200" style="font-size: 0.65rem; opacity: 0.6;">v2.2.0</span>
             </div>
             <!-- Search Bar -->
             <div class="mt-4">
@@ -1282,6 +1282,9 @@
             'vedabase-source/lec2a.html': 'Lectures (Part 4)',
             'vedabase-source/lec2b.html': 'Lectures (Part 5)',
             'vedabase-source/lec2c.html': 'Lectures (Part 6)',
+            'vedabase-source/conv1.html': 'Conversations (1966–1974)',
+            'vedabase-source/conv2.html': 'Conversations (1975–1976)',
+            'vedabase-source/conv3.html': 'Conversations (1976–1977)',
             'vedabase-source/let1.html': 'Letters (1947–1969)',
             'vedabase-source/let2.html': 'Letters (1970–1972)',
             'vedabase-source/let3.html': 'Letters (1973–1974)',
@@ -1410,17 +1413,20 @@
                                     : new RegExp(escapedQuery, regexFlags);
                             }
 
-                            // Extract just the content div to reduce parsing
-                            const contentMatch = html.match(/<div id="content"[^>]*>([\s\S]*?)<\/div>\s*<div id="postamble"/);
-                            if (!contentMatch) {
+                            // Extract content using indexOf (faster than regex on large files)
+                            const contentStart = html.indexOf('<div id="content"');
+                            if (contentStart === -1) {
                                 processedFiles++;
                                 if (processedFiles === filesToSearch.length) {
                                     displayResults(results, query);
                                 }
                                 return;
                             }
-
-                            const content = contentMatch[1];
+                            const contentBodyStart = html.indexOf('>', contentStart) + 1;
+                            let contentEnd = html.indexOf('<div id="postamble"', contentBodyStart);
+                            if (contentEnd === -1) contentEnd = html.indexOf('</body>', contentBodyStart);
+                            if (contentEnd === -1) contentEnd = html.length;
+                            const content = html.substring(contentBodyStart, contentEnd);
 
                             // Find all paragraphs and headings with a simpler regex
                             const elementRegex = /<(p|h[1-6])[^>]*>([\s\S]*?)<\/\1>/gi;
