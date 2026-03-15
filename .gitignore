@@ -36,6 +36,9 @@ Thumbs.db
 .env
 .env.local
 
+# Wrangler
+.wrangler/
+
 # Mobile platforms
 ios/App/Pods/
 ios/App/App/public/
