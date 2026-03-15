@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vedabase-v2.2.0';
+const CACHE_NAME = 'vedabase-v2.3.0';
 
 const PRECACHE_URLS = [
   './',
@@ -24,6 +24,9 @@ const PRECACHE_URLS = [
   './vedabase-source/conv1.html',
   './vedabase-source/conv2.html',
   './vedabase-source/conv3.html',
+  './vedabase-source/missing_convs_pre1975.html',
+  './vedabase-source/missing_convs_1975_1976.html',
+  './vedabase-source/missing_convs_1977.html',
   './vedabase-source/let1.html',
   './vedabase-source/let2.html',
   './vedabase-source/let3.html',

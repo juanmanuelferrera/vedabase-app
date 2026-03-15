@@ -142,7 +142,7 @@ jobs:
       - name: Upload to existing release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v1.5.0
+          tag_name: v1.6.0
           files: |
             artifacts/tauri-windows-builds/**/*
             artifacts/tauri-mac-arm-builds/**/*
