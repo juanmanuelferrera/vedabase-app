@@ -71,7 +71,9 @@
             background-color: #fff7ed;
             color: #ea580c;
         }
-        .tab-dropdown:hover .dropdown-content {
+        .tab-dropdown:hover .dropdown-content,
+        .tab-dropdown:focus-within .dropdown-content,
+        .tab-dropdown.open .dropdown-content {
             display: block;
         }
         .dropdown-arrow {
@@ -772,13 +774,30 @@
         let currentSrc = 'vedabase-source/bg.html';
         let isLoading = false;
 
+        // Mobile dropdown toggle - close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.tab-dropdown')) {
+                document.querySelectorAll('.tab-dropdown.open').forEach(d => d.classList.remove('open'));
+            }
+        });
+
         buttons.forEach(button => {
             button.addEventListener('click', function(e) {
                 const src = this.getAttribute('data-src');
 
-                // Ignore clicks on dropdown parent buttons (they don't have data-src)
+                // Handle dropdown parent buttons (they don't have data-src) - toggle on mobile
                 if (!src) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    const dropdown = this.closest('.tab-dropdown');
+                    if (dropdown) {
+                        // Close other dropdowns
+                        document.querySelectorAll('.tab-dropdown.open').forEach(d => {
+                            if (d !== dropdown) d.classList.remove('open');
+                        });
+                        // Toggle this dropdown
+                        dropdown.classList.toggle('open');
+                    }
                     return;
                 }
 
@@ -873,6 +892,10 @@
         dropdownItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation(); // Prevent event bubbling
+
+                // Close all dropdowns on selection (for mobile)
+                document.querySelectorAll('.tab-dropdown.open').forEach(d => d.classList.remove('open'));
+
                 const src = this.getAttribute('data-src');
 
                 // Don't reload if already on this page
