@@ -1,7 +1,7 @@
 {
   "productName": "Vedabase",
   "version": "1.6.0",
-  "identifier": "com.bhagavadgita.vedabase",
+  "identifier": "com.jaganat.vedabase",
   "build": {
     "beforeDevCommand": "",
     "beforeBuildCommand": "",
@@ -20,7 +20,7 @@
     "resources": [],
     "externalBin": [],
     "copyright": "",
-    "category": "Education",
+    "category": "Reference",
     "shortDescription": "Vedabase - Bhagavad-gita and more",
     "longDescription": "A searchable collection of Vedic texts including Bhagavad-gita As It Is",
     "linux": {

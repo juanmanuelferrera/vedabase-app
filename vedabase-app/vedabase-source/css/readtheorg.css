@@ -285,6 +285,28 @@ dl dd{
     }
 }
 
+/* Mobile typography - matching vedabase.io */
+@media screen and (max-width: 768px){
+    p{
+        font-size: 18px;
+        line-height: 28px;
+    }
+
+    #content{
+        padding: 1em 1.2em;
+    }
+
+    .verse{
+        font-size: 18px;
+        line-height: 28px;
+    }
+
+    li{
+        font-size: 18px;
+        line-height: 28px;
+    }
+}
+
 @media screen and (max-width: 768px){
     #content{
         margin-left:0;

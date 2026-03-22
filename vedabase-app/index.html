@@ -652,7 +652,8 @@
                 'ú':'u','ù':'u','û':'u','ü':'u',
                 'ç':'c','Ç':'C'
             };
-            return str.replace(/[^\x00-\x7F]/g, ch => map[ch] || ch);
+            return str.replace(/[^\x00-\x7F]/g, ch => map[ch] || ch)
+                      .replace(/[''ʼ`]/g, '');  // Also strip apostrophes
         }
 
         // Load dark mode preference (default: OFF)
