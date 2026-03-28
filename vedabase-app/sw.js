@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vedabase-v2.3.1';
+const CACHE_NAME = 'vedabase-v3.0.0';
 
 const PRECACHE_URLS = [
   './',
