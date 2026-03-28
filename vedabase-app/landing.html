@@ -3,391 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vedabase - Original | Desktop App for Srila Prabhupada's Works</title>
-    <meta name="description" content="Desktop application featuring original, unedited editions of Srila Prabhupada's works. Bhagavad-gita As It Is (1972 original), Srimad-Bhagavatam, and more - unchanged and unabridged as originally published.">
+    <title>Vedabase — Original Books by Srila Prabhupada</title>
+    <meta name="description" content="The original, unchanged, unabridged works by A.C. Bhaktivedanta Swami Prabhupada. Bhagavad-gita As It Is, Srimad-Bhagavatam, Caitanya-caritamrta and more.">
+    <link rel="stylesheet" href="app/fonts/fontawesome.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #ffffff;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --accent: #ea580c;
+            --accent-light: #fff7ed;
+            --border: #e5e7eb;
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            background: var(--bg);
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #ec4899 100%);
-            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
+        /* Hero */
+        .hero {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 80px 20px 60px;
+            background: linear-gradient(180deg, #fffbf5 0%, #ffffff 100%);
+            position: relative;
+        }
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        .hero .subtitle {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        .hero .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
             color: white;
-        }
-
-        h1 {
-            font-size: 3.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .tagline {
-            font-size: 1.4em;
-            opacity: 0.95;
-            max-width: 900px;
-            margin: 0 auto 30px;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-
-        .download-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 40px auto;
-            max-width: 900px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .download-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-            color: white;
-            padding: 18px 40px;
-            border-radius: 30px;
+            padding: 14px 32px;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: 600;
-            margin: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+            transition: background 0.2s;
+        }
+        .hero .cta:hover { background: #c2410c; }
+        .hero .cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            padding: 14px 24px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
         }
 
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
+        /* Container */
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 
-        .version {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 10px;
+        /* Downloads */
+        .downloads {
+            padding: 60px 20px;
+            background: #f9fafb;
         }
-
-        .features {
-            background: white;
-            border-radius: 20px;
-            padding: 50px 40px;
-            margin: 40px auto;
+        .downloads h2 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+        .downloads .sub {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
             max-width: 900px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin: 0 auto;
+        }
+        .download-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        .download-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(234,88,12,0.1);
+            transform: translateY(-2px);
+        }
+        .download-card .icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+        .download-card .platform {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 4px;
+        }
+        .download-card .detail {
+            font-size: 0.85em;
+            color: var(--text-secondary);
         }
 
+        /* Features */
+        .features {
+            padding: 60px 20px;
+        }
         .features h2 {
             text-align: center;
-            font-size: 2.5em;
+            font-size: 2em;
             margin-bottom: 40px;
-            color: #667eea;
         }
-
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
         }
-
         .feature {
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            transition: transform 0.2s;
-        }
-
-        .feature:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-        }
-
-        .feature h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .feature p {
-            color: #666;
-            font-size: 0.95em;
-        }
-
-        .gatekeeper-notice {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 40px auto;
-            max-width: 900px;
-        }
-
-        .gatekeeper-notice h3 {
-            color: #856404;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        .gatekeeper-notice ol {
-            margin-left: 20px;
-            color: #856404;
-        }
-
-        .gatekeeper-notice li {
-            margin: 8px 0;
-        }
-
-        .screenshot {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px auto;
-            max-width: 900px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        .screenshot img {
-            max-width: 100%;
+            padding: 24px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: var(--accent-light);
+        }
+        .feature h3 {
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+        .feature p {
+            font-size: 0.9em;
+            color: var(--text-secondary);
         }
 
-        .video-showcase {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 0 auto 40px;
-            max-width: 900px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        /* Books list */
+        .books {
+            padding: 60px 20px;
+            background: #f9fafb;
+        }
+        .books h2 {
             text-align: center;
-        }
-
-        .video-showcase h2 {
-            color: white;
-            margin-bottom: 25px;
             font-size: 2em;
+            margin-bottom: 32px;
         }
-
-        .video-showcase video {
-            max-width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        .books-list {
+            max-width: 600px;
+            margin: 0 auto;
         }
+        .books-list li {
+            list-style: none;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.05em;
+        }
+        .books-list li:last-child { border-bottom: none; }
 
+        /* Footer */
         footer {
             text-align: center;
             padding: 40px 20px;
-            color: white;
-            opacity: 0.9;
+            color: var(--text-secondary);
+            font-size: 0.85em;
         }
+        footer a { color: var(--accent); text-decoration: none; }
 
-        footer a {
-            color: white;
-            text-decoration: underline;
+        /* macOS notice */
+        .notice {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            padding: 20px 24px;
+            background: #fef3c7;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #92400e;
         }
+        .notice strong { color: #78350f; }
 
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5em;
-            }
-
-            .download-btn {
-                font-size: 1.1em;
-                padding: 15px 30px;
-            }
-
-            .features h2 {
-                font-size: 2em;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Responsive */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2em; }
+            .hero .subtitle { font-size: 1em; }
+            .download-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Vedabase - Original</h1>
-        <p class="tagline">A powerful desktop application for reading and studying the original, unchanged, unabridged works by A. C. Bhaktivedanta Swami Prabhupada</p>
-    </header>
 
-    <div class="container">
-        <div class="video-showcase">
-            <video controls autoplay muted loop playsinline>
-                <source src="vedabase-showcase-new.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+    <section class="hero">
+        <h1>Vedabase</h1>
+        <p class="subtitle">The original, unchanged, unabridged works by<br>A.C. Bhaktivedanta Swami Prabhupada</p>
+        <a href="app/" class="cta"><i class="fa-solid fa-book-open"></i> Open Web App</a>
+        <br><br>
+        <a href="#downloads" class="cta-secondary"><i class="fa-solid fa-download"></i> Download for your platform</a>
+    </section>
+
+    <section class="books">
+        <div class="container">
+            <h2>What's Included</h2>
+            <ul class="books-list">
+                <li><strong>Bhagavad-gita As It Is</strong> — 1972 Macmillan Edition</li>
+                <li><strong>Srimad-Bhagavatam</strong> — Cantos 1-10 (1977 Edition)</li>
+                <li><strong>Sri Caitanya-caritamrta</strong> — Adi, Madhya & Antya-lila</li>
+                <li><strong>Krsna Book</strong> — The Supreme Personality of Godhead</li>
+                <li><strong>Other Books</strong> — Nectar of Devotion, Isopanisad, and more</li>
+                <li><strong>Lectures</strong> — Complete collection</li>
+                <li><strong>Conversations</strong> — 1967-1977</li>
+                <li><strong>Letters</strong> — 1947-1977 (6,460 letters)</li>
+            </ul>
         </div>
+    </section>
 
-        <div class="download-section">
-            <h2 style="text-align: center; color: white; margin-bottom: 30px; font-size: 2em;">Download Vedabase</h2>
-            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start;">
-                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_x64-setup.exe" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em;">🪟</span>
-                        <span>Windows</span>
-                    </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • Windows 10+</p>
-                </div>
-                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_aarch64.dmg" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em;">🍎</span>
-                        <span>macOS (Apple Silicon)</span>
-                    </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • M1/M2/M3/M4</p>
-                </div>
-                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_x64.dmg" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em;">🍎</span>
-                        <span>macOS (Intel)</span>
-                    </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • Intel Macs</p>
-                </div>
-                <div style="flex: 1; min-width: 280px; max-width: 350px; text-align: center;">
-                    <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v1.5.0/Vedabase_1.5.0_amd64.deb" class="download-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em;">🐧</span>
-                        <span>Linux</span>
-                    </a>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9em; margin-top: 15px;">Version 1.5.0 • Ubuntu 20.04+</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="gatekeeper-notice">
-            <h3>🔒 macOS Installation Instructions</h3>
-            <p style="margin-bottom: 15px;">When you first try to open the app, macOS will show this security warning:</p>
-
-            <div style="text-align: center; margin: 20px 0; background: white; padding: 20px; border-radius: 10px;">
-                <img src="macos-gatekeeper.png" alt="macOS Gatekeeper Warning" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            </div>
-
-            <div style="background: #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                <p style="margin-bottom: 10px; font-size: 1.1em; font-weight: 600;">What to do:</p>
-                <ol style="font-weight: 500;">
-                    <li><strong>DO NOT</strong> click "Move to Trash"</li>
-                    <li>Click <strong>"Open Anyway"</strong> (the middle button)</li>
-                    <li>The app will open and macOS will remember it's safe</li>
-                </ol>
-            </div>
-
-            <div style="background: #fff8e1; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #ffc107;">
-                <p style="margin-bottom: 10px; font-size: 1.1em; font-weight: 600;">Alternative: Terminal command</p>
-                <p style="margin-bottom: 10px;">If the above doesn't work, open <strong>Terminal</strong> and run:</p>
-                <div style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.95em; overflow-x: auto;">
-                    xattr -cr /Applications/Vedabase.app
-                </div>
-                <p style="margin-top: 10px; font-size: 0.9em;">This removes the quarantine flag that macOS adds to downloaded apps. Then open Vedabase normally.</p>
-            </div>
-
-            <p style="margin-top: 15px;"><strong>Why does this happen?</strong> This app is not signed with an Apple Developer certificate. It's completely safe and open source - you can review the entire code on <a href="https://github.com/juanmanuelferrera/vedabase-app" target="_blank" style="color: #856404; text-decoration: underline; font-weight: 600;">GitHub</a>.</p>
-        </div>
-
-        <div class="features">
+    <section class="features">
+        <div class="container">
             <h2>Features</h2>
             <div class="feature-grid">
                 <div class="feature">
-                    <div class="feature-icon">🔍</div>
-                    <h3>Full-text Search</h3>
-                    <p>Search through all text with instant highlighting of matches</p>
+                    <h3><i class="fa-solid fa-magnifying-glass"></i> Search</h3>
+                    <p>Search across all books with Sanskrit diacritics support. Use + - AND OR operators.</p>
                 </div>
-
                 <div class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Smart Highlighting</h3>
-                    <p>Visual emphasis on all search matches with navigation controls</p>
+                    <h3><i class="fa-solid fa-star"></i> Bookmarks</h3>
+                    <p>Save your reading position with one tap. Access your reading list anytime.</p>
                 </div>
-
                 <div class="feature">
-                    <div class="feature-icon">🔎</div>
-                    <h3>Advanced Search</h3>
-                    <p>Regex patterns and search-within-results filtering</p>
+                    <h3><i class="fa-solid fa-circle-half-stroke"></i> Dark Mode</h3>
+                    <p>Read comfortably day or night with automatic dark mode support.</p>
                 </div>
-
                 <div class="feature">
-                    <div class="feature-icon">📑</div>
-                    <h3>Cross-references</h3>
-                    <p>Click verse references to jump instantly between sections</p>
+                    <h3><i class="fa-solid fa-text-height"></i> Font Size</h3>
+                    <p>Adjust text size for comfortable reading on any device.</p>
                 </div>
-
                 <div class="feature">
-                    <div class="feature-icon">📝</div>
-                    <h3>Personal Notes</h3>
-                    <p>Add, edit, and manage annotations on any verse</p>
+                    <h3><i class="fa-solid fa-wifi-slash"></i> Works Offline</h3>
+                    <p>All content included. No internet required after initial download.</p>
                 </div>
-
                 <div class="feature">
-                    <div class="feature-icon">🌓</div>
-                    <h3>Dark Mode</h3>
-                    <p>True dark theme with white text on black background</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">📖</div>
-                    <h3>Interactive TOC</h3>
-                    <p>One-click collapsible Table of Contents navigation</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Font Control</h3>
-                    <p>Adjustable text size for comfortable reading</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">💾</div>
-                    <h3>Fully Offline</h3>
-                    <p>Standalone app with all content embedded, no internet needed</p>
+                    <h3><i class="fa-solid fa-italic"></i> Original Formatting</h3>
+                    <p>Sanskrit terms in italics, verse grouping with stanza breaks — as originally published.</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div style="background: white; border-radius: 20px; padding: 40px; margin: 40px auto; max-width: 900px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-            <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Building from Source</h2>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.9em;">
-                <p style="margin-bottom: 15px;"><strong>Prerequisites:</strong> Node.js, Rust and Cargo, Tauri CLI</p>
-                <p style="margin-bottom: 10px;"><code># Install dependencies</code></p>
-                <p style="margin-bottom: 10px;"><code>npm install</code></p>
-                <br>
-                <p style="margin-bottom: 10px;"><code># Development mode</code></p>
-                <p style="margin-bottom: 10px;"><code>npm run tauri:dev</code></p>
-                <br>
-                <p style="margin-bottom: 10px;"><code># Production build</code></p>
-                <p><code>npm run tauri:build</code></p>
+    <section class="downloads" id="downloads">
+        <div class="container">
+            <h2>Download v3.0.0</h2>
+            <p class="sub">Free and open source. Available for all platforms.</p>
+
+            <div class="download-grid">
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v3.0.0/Vedabase_3.0.0_x64-setup.exe" class="download-card">
+                    <div class="icon"><i class="fa-brands fa-windows"></i></div>
+                    <div class="platform">Windows</div>
+                    <div class="detail">.exe installer</div>
+                </a>
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v3.0.0/Vedabase_3.0.0_aarch64.dmg" class="download-card">
+                    <div class="icon"><i class="fa-brands fa-apple"></i></div>
+                    <div class="platform">macOS (Silicon)</div>
+                    <div class="detail">M1/M2/M3 .dmg</div>
+                </a>
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v3.0.0/Vedabase_3.0.0_x64.dmg" class="download-card">
+                    <div class="icon"><i class="fa-brands fa-apple"></i></div>
+                    <div class="platform">macOS (Intel)</div>
+                    <div class="detail">x64 .dmg</div>
+                </a>
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v3.0.0/Vedabase_3.0.0_amd64.deb" class="download-card">
+                    <div class="icon"><i class="fa-brands fa-linux"></i></div>
+                    <div class="platform">Linux .deb</div>
+                    <div class="detail">Debian/Ubuntu</div>
+                </a>
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v3.0.0/Vedabase_3.0.0_amd64.AppImage" class="download-card">
+                    <div class="icon"><i class="fa-brands fa-linux"></i></div>
+                    <div class="platform">Linux AppImage</div>
+                    <div class="detail">Universal</div>
+                </a>
+                <a href="https://github.com/juanmanuelferrera/vedabase-app/releases/download/v3.0.0/app-release-unsigned.apk" class="download-card">
+                    <div class="icon"><i class="fa-brands fa-android"></i></div>
+                    <div class="platform">Android</div>
+                    <div class="detail">.apk</div>
+                </a>
+            </div>
+
+            <div class="notice" style="margin-top:32px">
+                <strong>macOS users:</strong> If you see "Vedabase can't be opened because Apple cannot check it for malicious software", right-click the app → Open → Open. This only happens once.
             </div>
         </div>
-    </div>
+    </section>
 
     <footer>
-        <p style="font-weight: 600; font-size: 1em;">All texts are original editions, faithfully preserved from Srila Prabhupada's published works</p>
-        <p style="margin-top: 15px;">Sponsored by <a href="https://www.vedicvault.org/projects">Vedic Vault</a></p>
-        <p style="margin-top: 20px; font-size: 0.9em;">Built with ❤️ using Tauri</p>
+        <p>Vedabase — Original Books by A.C. Bhaktivedanta Swami Prabhupada</p>
+        <p style="margin-top:8px"><a href="app/">Open Web App</a> · <a href="https://github.com/juanmanuelferrera/vedabase-app">GitHub</a> · <a href="https://vedicvault.org">VedicVault.org</a></p>
     </footer>
+
 </body>
 </html>
