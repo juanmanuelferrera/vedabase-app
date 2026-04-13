@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vedabase Original</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; background: #f3d4a5; color: #1a1a1a; min-height: 100vh; }
+
+    /* Nav */
+    .nav { background: #da9d5b; padding: 12px 24px; display: flex; align-items: center; gap: 24px; position: sticky; top: 0; z-index: 50; }
+    .nav-title { font-size: 1.3em; font-weight: bold; cursor: pointer; }
+    .nav-links { display: flex; gap: 16px; flex: 1; }
+    .nav-links a { text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 0.95em; }
+    .nav-links a:hover { opacity: 0.7; }
+    .nav-search { display: flex; gap: 8px; }
+    .nav-search input { padding: 6px 12px; border: 1px solid #a16207; border-radius: 6px; background: rgba(243,212,165,0.5); font-size: 0.9em; width: 200px; }
+
+    /* Content */
+    .content { max-width: 900px; margin: 0 auto; padding: 24px; }
+    .content h1 { font-size: 2em; margin-bottom: 8px; }
+    .content p { margin-bottom: 16px; line-height: 1.7; }
+
+    /* Library grid */
+    .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 24px; }
+    .book-card { background: rgba(218,157,91,0.3); border: 1px solid #a16207; border-radius: 8px; padding: 16px; cursor: pointer; }
+    .book-card:hover { background: rgba(218,157,91,0.5); }
+    .book-card h3 { font-size: 1.1em; margin-bottom: 4px; }
+    .book-card p { font-size: 0.85em; opacity: 0.7; margin: 0; }
+
+    /* Search results */
+    .search-result { padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .search-result a { color: #b91c1c; font-weight: 600; text-decoration: none; }
+    .search-result a:hover { text-decoration: underline; }
+    .search-result .snippet { font-size: 0.9em; margin-top: 4px; opacity: 0.85; }
+    .search-result .translation { font-weight: 600; margin-top: 4px; }
+
+    /* Verse page */
+    .verse-text { font-style: italic; margin: 16px 0; padding: 12px; background: rgba(218,157,91,0.2); border-radius: 8px; }
+    .synonyms { margin: 16px 0; font-size: 0.95em; }
+    .purport { margin: 16px 0; text-align: justify; }
+
+    /* Status */
+    .status { text-align: center; padding: 40px; opacity: 0.6; font-style: italic; }
+    .loading { text-align: center; padding: 40px; }
+
+    /* Dark mode */
+    .dark body { background: #0d0d0d; color: #d4d4d4; }
+    .dark .nav { background: #1a1a1a; }
+    .dark .book-card { background: rgba(42,42,42,0.5); border-color: #333; }
+    .dark .book-card:hover { background: rgba(42,42,42,0.8); }
+    .dark .search-result a { color: #e8b84b; }
+    .dark .nav-search input { background: rgba(26,26,26,0.5); color: #d4d4d4; border-color: #333; }
+    .dark .verse-text { background: rgba(42,42,42,0.5); }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="nav-title" onclick="navigate('library')">Vedabase Original</div>
+    <div class="nav-links">
+      <a href="#" onclick="navigate('library')">Library</a>
+      <a href="#" onclick="navigate('search')">Search</a>
+      <a href="#" onclick="navigate('about')">About</a>
+    </div>
+    <div class="nav-search">
+      <input type="text" id="searchInput" placeholder="Search…" onkeyup="if(event.key==='Enter')doSearch()">
+    </div>
+  </div>
+  <div class="content" id="app">
+    <div class="status">Loading library...</div>
+  </div>
+
+  <script>
+    // Tauri IPC
+    const { invoke } = window.__TAURI__.core;
+
+    const BOOKS = {
+      bg: 'Bhagavad-gītā As It Is',
+      sb: 'Śrīmad-Bhāgavatam',
+      cc: 'Śrī Caitanya-caritāmṛta',
+      iso: 'Śrī Īśopaniṣad',
+      noi: 'Nectar of Instruction',
+      nod: 'The Nectar of Devotion',
+      kb: 'Kṛṣṇa, the Supreme Personality of Godhead',
+      ssr: 'The Science of Self-Realization',
+      bbd: 'Beyond Birth and Death',
+      tlc: 'Teachings of Lord Caitanya',
+      tlk: 'Teachings of Lord Kapila',
+      tqk: 'Teachings of Queen Kuntī',
+      pop: 'The Path of Perfection',
+      poy: 'The Perfection of Yoga',
+      pqpa: 'Perfect Questions, Perfect Answers',
+      rv: 'Rāja-vidyā',
+      owk: 'On the Way to Kṛṣṇa',
+      lob: 'Light of the Bhāgavata',
+      bs: 'Śrī Brahma-saṁhitā',
+      ejop: 'Easy Journey to Other Planets',
+      ekc: 'Elevation to Kṛṣṇa Consciousness',
+      lcfl: 'Life Comes from Life',
+      rop: 'Kṛṣṇa, the Reservoir of Pleasure',
+      tpm: 'Teachings of Prahlāda Mahārāja',
+      tys: 'The Topmost Yoga System',
+    };
+
+    let currentLang = 'en';
+
+    function navigate(page, params) {
+      const app = document.getElementById('app');
+      if (page === 'library') showLibrary(app);
+      else if (page === 'search') showSearch(app, params);
+      else if (page === 'about') showAbout(app);
+    }
+
+    function showLibrary(app) {
+      let html = '<h1>Library</h1>';
+      html += '<p>The original unchanged books of Śrīla Prabhupāda.</p>';
+      html += '<div class="library-grid">';
+      for (const [slug, name] of Object.entries(BOOKS)) {
+        html += `<div class="book-card" onclick="searchBook('${slug}')">`;
+        html += `<h3>${name}</h3>`;
+        html += `<p>${slug.toUpperCase()}</p>`;
+        html += '</div>';
+      }
+      html += '</div>';
+      app.innerHTML = html;
+    }
+
+    function showSearch(app, query) {
+      let html = '<h1>Search</h1>';
+      html += '<div style="display:flex;gap:8px;margin:16px 0">';
+      html += `<input type="text" id="searchQuery" value="${query || ''}" placeholder="Search the Vedabase..." style="flex:1;padding:12px 16px;border:1px solid #a16207;border-radius:6px;font-size:1em;background:rgba(243,212,165,0.3)">`;
+      html += '<button onclick="doSearch()" style="padding:12px 24px;background:#0f766e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600">Search</button>';
+      html += '</div>';
+      html += '<div id="searchResults"></div>';
+      app.innerHTML = html;
+      if (query) doSearch(query);
+    }
+
+    async function doSearch(q) {
+      const query = q || document.getElementById('searchQuery')?.value || document.getElementById('searchInput')?.value;
+      if (!query || query.length < 2) return;
+
+      const resultsDiv = document.getElementById('searchResults') || document.getElementById('app');
+      resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
+
+      try {
+        const response = await invoke('search', { query, lang: currentLang, limit: 30 });
+        let html = `<p style="opacity:0.7;font-style:italic;margin:12px 0">${response.count} results for "${response.query}"</p>`;
+
+        for (const r of response.results) {
+          const ref = r.ref.replace(/\//g, '.').toUpperCase();
+          const bookName = BOOKS[r.book] || r.book;
+          html += '<div class="search-result">';
+          html += `<a href="#">${ref} — ${bookName}</a>`;
+          if (r.translation) html += `<div class="translation">${r.translation.substring(0, 250)}${r.translation.length > 250 ? '...' : ''}</div>`;
+          if (r.snippet) html += `<div class="snippet">${r.snippet}</div>`;
+          html += '</div>';
+        }
+
+        if (response.count === 0) html = '<div class="status">No results found.</div>';
+
+        if (document.getElementById('searchResults')) {
+          document.getElementById('searchResults').innerHTML = html;
+        } else {
+          showSearch(document.getElementById('app'), query);
+        }
+      } catch (e) {
+        resultsDiv.innerHTML = `<div class="status">Search error: ${e}</div>`;
+      }
+    }
+
+    function searchBook(slug) {
+      showSearch(document.getElementById('app'));
+      // Could filter by book in future
+    }
+
+    function showAbout(app) {
+      app.innerHTML = `
+        <h1>About This Edition</h1>
+        <p>This library contains the original, unedited works of His Divine Grace A.C. Bhaktivedanta Swami Prabhupāda.</p>
+        <h2 style="margin-top:24px">Verified Against Original Editions</h2>
+        <p>After Śrīla Prabhupāda's departure in 1977, his books underwent editorial revisions. Thousands of changes were introduced — from minor punctuation to significant alterations that affect philosophical meaning.</p>
+        <p>The texts in this library have been <strong>verified against the original printed editions</strong> by cross-referencing with scanned copies of the books as Śrīla Prabhupāda personally approved and published them.</p>
+        <p style="margin-top:24px;opacity:0.6;text-align:center;font-style:italic">This project is a humble offering to Śrīla Prabhupāda and all sincere seekers of his original message.</p>
+      `;
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      // Apply dark mode from localStorage
+      try {
+        const s = JSON.parse(localStorage.getItem('vbSettings') || '{}');
+        if (s.dark) document.documentElement.classList.add('dark');
+      } catch(e) {}
+
+      navigate('library');
+    });
+  </script>
+</body>
+</html>

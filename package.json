@@ -1,0 +1,13 @@
+{
+  "name": "vedabase-app",
+  "version": "0.1.0",
+  "description": "The original unchanged books of Śrīla Prabhupāda — offline desktop reader",
+  "scripts": {
+    "build-db": "./scripts/build-db.sh",
+    "dev": "npx @tauri-apps/cli dev",
+    "build": "npx @tauri-apps/cli build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.10.1"
+  }
+}
