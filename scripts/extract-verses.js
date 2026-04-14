@@ -29,6 +29,40 @@ function stripHtml(s) {
     .trim();
 }
 
+// Preserve formatting: keep <em>, <strong>, convert <p>/<br>/<div> to clean paragraphs
+function cleanHtml(s) {
+  if (!s) return '';
+  return s
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>\s*/gi, '\n\n')
+    .replace(/<p[^>]*>/gi, '')
+    .replace(/<\/div>\s*/gi, '\n')
+    .replace(/<div[^>]*>/gi, '')
+    .replace(/<h\d[^>]*>/gi, '').replace(/<\/h\d>/gi, '')
+    .replace(/<span[^>]*>/gi, '').replace(/<\/span>/gi, '')
+    .replace(/<a[^>]*>/gi, '').replace(/<\/a>/gi, '')
+    .replace(/<ul[^>]*>/gi, '').replace(/<\/ul>/gi, '')
+    .replace(/<li[^>]*>/gi, '• ').replace(/<\/li>/gi, '\n')
+    .replace(/<img[^>]*>/gi, '')
+    .replace(/<[^>]+>/g, function(tag) {
+      var t = tag.toLowerCase();
+      if (t === '<em>' || t === '<i>') return '<i>';
+      if (t === '</em>' || t === '</i>') return '</i>';
+      if (t === '<strong>' || t === '<b>') return '<b>';
+      if (t === '</strong>' || t === '</b>') return '</b>';
+      return '';
+    })
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 function cleanTrailing(s) {
   return (s || '')
     .replace(/\s*(?:TEXT|Text)\s+\d+(?:\s+(?:TEXT|Text)\s+\d+)*\s*$/s, '')
@@ -75,20 +109,20 @@ function extractVerse(htmlFile, book, ref) {
     let translation = '';
     const transMatch = html.match(/class="av-translation"[\s\S]*?<div[^>]*copy[^>]*>([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>\s*<div class="av-/);
     if (transMatch) {
-      translation = stripHtml(transMatch[1]).trim();
+      translation = cleanHtml(transMatch[1]).trim();
     } else {
       const tr2 = html.match(/Translation<\/h2>[\s\S]*?<div[^>]*copy[^>]*>([\s\S]*?)<\/div>\s*<\/div>\s*(?:<\/div>|<div class="av-)/);
-      if (tr2) translation = stripHtml(tr2[1]).trim();
+      if (tr2) translation = cleanHtml(tr2[1]).trim();
     }
 
     // Extract purport — stop at footer or prev/next nav
     let purport = '';
     const purpMatch = html.match(/class="av-purport"[\s\S]*?<div[^>]*copy[^>]*>([\s\S]*?)(?:<div[^>]*id="footer"|<div class="mt-10|<\/main>|$)/);
     if (purpMatch) {
-      purport = stripHtml(purpMatch[1]).trim();
+      purport = cleanHtml(purpMatch[1]).trim();
     } else {
       const pu2 = html.match(/Purport<\/h2>[\s\S]*?<div[^>]*copy[^>]*>([\s\S]*?)(?:<div[^>]*id="footer"|<div class="mt-10|<\/main>|$)/);
-      if (pu2) purport = stripHtml(pu2[1]).trim();
+      if (pu2) purport = cleanHtml(pu2[1]).trim();
     }
 
     // Clean trailing nav text

@@ -150,7 +150,7 @@ async function loadBook(slug){if(bookCache[slug])return bookCache[slug];var r=aw
   v.sort(function(a,b){var pa=a.ref.replace(slug+'/','').split('/').map(Number),pb=b.ref.replace(slug+'/','').split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++){if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0)}return 0});
   bookCache[slug]=v;var m=new Map();v.forEach(x=>m.set(x.ref,x));verseMap[slug]=m;return v}
 async function loadSearchIndex(){if(searchIndex)return searchIndex;var r=await fetch('books/search-index.json');searchIndex=await r.json();return searchIndex}
-function joinLines(s){if(!s)return'';return s.replace(/\n\n+/g,'</p><p>').replace(/\n/g,' ').trim()}
+function joinLines(s){if(!s)return'';return s.replace(/\n\n+/g,'</p><p>').replace(/\n/g,' ').replace(/<\/i>\s*<i>/g,' ').trim()}
 
 function setNav(opts){var n=document.getElementById('bottomNav');if(!opts){n.classList.remove('active');document.body.classList.remove('has-bottom-nav');return}var h='';if(opts.prev)h+='<a href="#" onclick="'+opts.prev.action+'">← '+opts.prev.label+'</a>';else h+='<div></div>';h+='<span class="center">'+(opts.center||'')+'</span>';if(opts.next)h+='<a href="#" onclick="'+opts.next.action+'">'+opts.next.label+' →</a>';else h+='<div></div>';n.innerHTML=h;n.classList.add('active');document.body.classList.add('has-bottom-nav')}
 
