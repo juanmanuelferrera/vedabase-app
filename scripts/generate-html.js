@@ -38,7 +38,9 @@ function cleanText(s) {
     .replace(/\s*His Divine Grace A\.C\. Bhaktivedanta Swami Prabhupāda.*$/s, '')
     .replace(/\s*Content used with permission.*$/s, '')
     .replace(/\s*Privacy policy\s*$/s, '')
-    .replace(/\s*Text \d+\s*$/s, '')
+    .replace(/\s*(?:TEXT|Text)\s+\d+(?:\s+(?:TEXT|Text)\s+\d+)*\s*$/s, '')
+    .replace(/\s*(?:Chapter\s+\w+\s*←?\s*→?\s*)+$/s, '')
+    .replace(/\s*←\s*.*$/s, '')
     .trim();
 }
 function nl2br(s) { return (s||'').replace(/\n/g,'<br>'); }
@@ -49,13 +51,32 @@ for (const [slug, name] of Object.entries(BOOKS)) {
   const rows = db.prepare('SELECT ref, verse_text, synonyms, translation, purport FROM verses WHERE book = ? AND lang = ? ORDER BY id').all(slug, 'en');
   if (rows.length === 0) continue;
 
-  const verses = rows.map(r => ({
-    ref: r.ref,
-    v: cleanText(r.verse_text) || undefined,
-    s: cleanText(r.synonyms) || undefined,
-    t: cleanText(r.translation) || undefined,
-    p: cleanText(r.purport) || undefined,
-  }));
+  const verses = rows.map(r => {
+    var vt = cleanText(r.verse_text) || '';
+    var sy = cleanText(r.synonyms) || '';
+    var tr = cleanText(r.translation) || '';
+    var pu = cleanText(r.purport) || '';
+
+    // Fix books where all content is merged into purport (e.g. ISO)
+    if (!vt && !sy && pu.match(/^(?:Iso|Noi|Bs)\s+\d+\nVerse text\n/i)) {
+      var sections = pu.split(/\n(?=Verse text\n|Synonyms\n|Translation\n|Purport\n)/);
+      for (var sec of sections) {
+        if (sec.startsWith('Verse text\n')) vt = sec.replace('Verse text\n', '').trim();
+        else if (sec.startsWith('Synonyms\n')) sy = sec.replace('Synonyms\n', '').trim();
+        else if (sec.startsWith('Translation\n')) tr = sec.replace('Translation\n', '').trim();
+        else if (sec.startsWith('Purport\n')) pu = sec.replace('Purport\n', '').trim();
+        else if (/^(?:Iso|Noi|Bs)\s+\d+$/m.test(sec.split('\n')[0])) continue; // skip ref header
+      }
+    }
+
+    return {
+      ref: r.ref,
+      v: vt || undefined,
+      s: sy || undefined,
+      t: tr || undefined,
+      p: pu || undefined,
+    };
+  });
 
   const outFile = path.join(OUT_DIR, slug + '.json');
   fs.writeFileSync(outFile, JSON.stringify(verses));

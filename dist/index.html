@@ -142,7 +142,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.ge
 
 // Data
 const bookCache={};const verseMap={};let searchIndex=null;
-async function loadBook(slug){if(bookCache[slug])return bookCache[slug];var r=await fetch('books/'+slug+'.json');if(!r.ok)return null;var v=await r.json();bookCache[slug]=v;var m=new Map();v.forEach(x=>m.set(x.ref,x));verseMap[slug]=m;return v}
+async function loadBook(slug){if(bookCache[slug])return bookCache[slug];var r=await fetch('books/'+slug+'.json');if(!r.ok)return null;var v=await r.json();
+  v.sort(function(a,b){var pa=a.ref.replace(slug+'/','').split('/').map(Number),pb=b.ref.replace(slug+'/','').split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++){if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0)}return 0});
+  bookCache[slug]=v;var m=new Map();v.forEach(x=>m.set(x.ref,x));verseMap[slug]=m;return v}
 async function loadSearchIndex(){if(searchIndex)return searchIndex;var r=await fetch('books/search-index.json');searchIndex=await r.json();return searchIndex}
 function joinLines(s){if(!s)return'';return s.replace(/\n(?!\n)/g,' ').replace(/\n{2,}/g,'</p><p>').trim()}
 
@@ -171,12 +173,23 @@ async function doSearch(q){
   var query=q||document.getElementById('searchQuery')?.value||document.getElementById('navSearch')?.value;
   if(!query||query.length<2)return;var div=document.getElementById('searchResults')||document.getElementById('app');
   div.innerHTML='<div class="loading">Searching...</div>';
-  var idx=await loadSearchIndex();var ql=query.toLowerCase();
-  var res=idx.filter(r=>r.translation&&r.translation.toLowerCase().includes(ql)).slice(0,30);
+  var ql=query.toLowerCase();var esc=query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');var re=new RegExp('('+esc+')','gi');
+  var res=[];
+  // Search across all loaded + unloaded books
+  for(var slug of ORDER.concat(['transcripts','letters'])){
+    var verses=await loadBook(slug);if(!verses)continue;
+    for(var v of verses){
+      var match='';
+      if(v.t&&v.t.toLowerCase().includes(ql))match=v.t;
+      else if(v.p&&v.p.toLowerCase().includes(ql)){var pi=v.p.toLowerCase().indexOf(ql);match=v.p.substring(Math.max(0,pi-80),pi+200)}
+      else if(v.s&&v.s.toLowerCase().includes(ql))match=v.s;
+      if(match){res.push({ref:v.ref,book:slug,text:match});if(res.length>=50)break}
+    }
+    if(res.length>=50)break;
+  }
   var h='<div style="opacity:0.7;font-style:italic;margin-bottom:12px">'+res.length+' results for "'+query+'"</div>';
-  var esc=query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  for(var r of res){var ref=r.ref.replace(/\//g,'.').toUpperCase();var tr=r.translation.replace(new RegExp('('+esc+')','gi'),'<b>$1</b>');
-    h+='<div class="search-result"><a href="#" onclick="showVerse(\''+r.ref+'\')">'+ref+' — '+(BK[r.book]||r.book)+'</a><div class="trans">'+tr.substring(0,300)+'</div></div>'}
+  for(var r of res){var ref=r.ref.replace(/\//g,'.').toUpperCase();var snippet=r.text.replace(/\n/g,' ').substring(0,300).replace(re,'<b>$1</b>');
+    h+='<div class="search-result"><a href="#" onclick="showVerse(\''+r.ref+'\')">'+ref+' — '+(BK[r.book]||r.book)+'</a><div class="trans">'+snippet+'</div></div>'}
   if(!res.length)h='<div class="loading">No results found.</div>';div.innerHTML=h;
 }
 
@@ -211,7 +224,7 @@ async function showChapter(slug,chPath){
   var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a> » <a href="#" onclick="showBook(\''+slug+'\')">'+name+'</a>';
   if(pts.length>1)h+=' » <a href="#" onclick="showCanto(\''+slug+'\',\''+pts[0]+'\')">Canto '+pts[0]+'</a>';
   h+='</div><h1>Chapter '+pts[pts.length-1]+'</h1>';
-  for(var ref of vr){var vn=ref.split('/').pop();var v=all.find(x=>x.ref===ref);if(v){var tr=(v.t||'').replace(/\n/g,' ');h+='<div class="verse-item"><a href="#" onclick="showVerse(\''+ref+'\')">TEXT '+vn+':</a> '+tr+'</div>'}}
+  for(var ref of vr){var vn=ref.split('/').pop();var v=all.find(x=>x.ref===ref);if(v){var tr=(v.t||'').replace(/\n/g,' ');if(tr.length>300)tr=tr.substring(0,300)+'…';h+='<div class="verse-item"><a href="#" onclick="showVerse(\''+ref+'\')">TEXT '+vn+':</a> '+tr+'</div>'}}
   app.innerHTML=h;window.scrollTo(0,0);
   // Bottom nav
   var allCh=[...new Set(refs.filter(r=>r.startsWith(slug+'/')).map(r=>{var p=r.replace(slug+'/','').split('/');return p.length>1?p.slice(0,-1).join('/'):null}).filter(Boolean))].sort((a,b)=>{var pa=a.split('/').map(Number),pb=b.split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++)if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0);return 0});
@@ -224,15 +237,19 @@ async function showVerse(ref){
   var slug=ref.split('/')[0];var verses=await loadBook(slug);var v=verses?verses.find(x=>x.ref===ref):null;
   if(!v){app.innerHTML='<div class="error">Verse not found</div>';return}
   var name=BK[slug]||slug;var vn=ref.replace(slug+'/','');var pts=vn.split('/');
-  var isCh=!v.v&&!v.s&&(/^Chapter\s+\d+$/i.test((v.t||'').trim())||pts.length===1);
+  var isCh=!v.v&&!v.s&&/^Chapter\s+\d+$/i.test((v.t||'').trim());
   var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a> » <a href="#" onclick="showBook(\''+slug+'\')">'+name+'</a></div>';
   if(isCh){
     h+='<h1>'+name+'</h1><p style="text-align:center;font-size:1.2em">Chapter '+pts[0]+'</p>';
     if(v.p){var pur=v.p.replace(/^Chapter\s+\d+\n/i,'');var lines=pur.split('\n');if(lines[0]&&lines[0].length<60&&/^[A-Z]/.test(lines[0])){h+='<h2 style="text-align:center">'+lines[0]+'</h2>';pur=lines.slice(1).join('\n')}h+='<p>'+joinLines(pur)+'</p>'}
   } else {
-    h+='<h1>'+name+' '+vn.replace(/\//g,'.')+'</h1>';
+    var vnLabel=vn.replace(/\//g,'.');var isSingleLevel=pts.length===1;
+    if(isSingleLevel&&(slug==='iso'))vnLabel='Mantra '+vn;
+    else if(isSingleLevel)vnLabel='Chapter '+vn;
+    h+='<h1>'+name+'</h1><p style="text-align:center;font-size:1.2em;margin-bottom:16px">'+vnLabel+'</p>';
+    if(v.d)h+='<div style="text-align:center;font-size:1.15em;margin:1em 0 0.5em;white-space:pre-line">'+v.d+'</div>';
     if(v.v)h+='<div class="verse-text">'+v.v+'</div>';
-    if(v.s)h+='<h2>Synonyms</h2><div class="synonyms">'+v.s.replace(/\n/g,'<br>')+'</div>';
+    if(v.s){var syn=v.s.replace(/\n(—)/g,' $1').replace(/;\n/g,'; ').replace(/(^|;\s*)([^—;]+?)\s*(—)/g,'$1<i>$2</i> $3');h+='<h2>Synonyms</h2><div class="synonyms">'+syn+'</div>';}
     if(v.t)h+='<h2>Translation</h2><div class="translation">'+joinLines(v.t)+'</div>';
     if(v.p)h+='<h2>Purport</h2><p>'+joinLines(v.p)+'</p>';
   }
