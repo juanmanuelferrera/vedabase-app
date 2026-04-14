@@ -1,201 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vedabase Original</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Georgia, serif; background: #f3d4a5; color: #1a1a1a; min-height: 100vh; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vedabase Original</title>
+<style>
+:root{--bg:#f3d4a5;--header:#da9d5b;--header2:#c48a3f;--dark:#a16207;--text:#1a1a1a;--link:#b91c1c;--action:#0f766e;--action-text:#fff;--font-serif:Georgia,'Times New Roman',serif;--font-sans:system-ui,-apple-system,sans-serif;--fs:1em}
+html.vb-dark{--bg:#0d0d0d;--header:#1a1a1a;--header2:#111;--dark:#333;--text:#d4d4d4;--link:#e8b84b;--action:#2a2a2a;--action-text:#e8b84b}
+html.font-size-1{--fs:0.75em}html.font-size-2{--fs:0.8em}html.font-size-3{--fs:0.875em}html.font-size-4{--fs:0.95em}html.font-size-5{--fs:1em}html.font-size-6{--fs:1.1em}html.font-size-7{--fs:1.2em}html.font-size-8{--fs:1.35em}html.font-size-9{--fs:1.5em}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-serif);background:var(--bg);color:var(--text);min-height:100vh;font-size:var(--fs)}
+html.sans body{font-family:var(--font-sans)}
+a{color:var(--link)}
 
-    /* Nav */
-    .nav { background: #da9d5b; padding: 12px 24px; display: flex; align-items: center; gap: 24px; position: sticky; top: 0; z-index: 50; }
-    .nav-title { font-size: 1.3em; font-weight: bold; cursor: pointer; }
-    .nav-links { display: flex; gap: 16px; flex: 1; }
-    .nav-links a { text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 0.95em; }
-    .nav-links a:hover { opacity: 0.7; }
-    .nav-search { display: flex; gap: 8px; }
-    .nav-search input { padding: 6px 12px; border: 1px solid #a16207; border-radius: 6px; background: rgba(243,212,165,0.5); font-size: 0.9em; width: 200px; }
+/* Header */
+.hdr{background:var(--header);padding:10px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.hdr-title{font-size:1.2em;font-weight:bold;cursor:pointer;text-decoration:none;color:var(--text)}
+.hdr-spacer{flex:1}
+.hdr-gear{cursor:pointer;opacity:0.8;font-size:1.2em}
+.hdr-gear:hover{opacity:1}
+.nav2{background:var(--header2);display:flex;align-items:center;padding:6px 16px;gap:12px;position:sticky;top:42px;z-index:49}
+.nav2 a{text-decoration:none;font-weight:600;font-size:0.9em;color:var(--text);white-space:nowrap}
+.nav2 a:hover{opacity:0.7}
+.nav2-search{display:flex;align-items:center;background:var(--bg);opacity:0.7;border:1px solid var(--dark);border-radius:6px;padding:4px 10px;gap:6px;max-width:200px}
+.nav2-search input{border:none;background:none;outline:none;width:100%;font-size:0.85em;color:var(--text)}
 
-    /* Content */
-    .content { max-width: 900px; margin: 0 auto; padding: 24px; }
-    .content h1 { font-size: 2em; margin-bottom: 8px; }
-    .content p { margin-bottom: 16px; line-height: 1.7; }
+/* Content */
+.main{max-width:900px;margin:0 auto;padding:16px}
+body.has-bottom-nav .main{padding-bottom:70px}
+.breadcrumb{font-size:0.9em;margin-bottom:16px}
+.breadcrumb a{color:var(--link);text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+h1{font-family:var(--font-serif);font-size:2em;text-align:center;margin:16px 0}
+h2{font-family:var(--font-serif);font-size:1.4em;font-weight:bold;margin:24px 0 8px}
+p{margin-bottom:16px;line-height:1.7;text-align:justify}
 
-    /* Library grid */
-    .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 24px; }
-    .book-card { background: rgba(218,157,91,0.3); border: 1px solid #a16207; border-radius: 8px; padding: 16px; cursor: pointer; }
-    .book-card:hover { background: rgba(218,157,91,0.5); }
-    .book-card h3 { font-size: 1.1em; margin-bottom: 4px; }
-    .book-card p { font-size: 0.85em; opacity: 0.7; margin: 0; }
+/* Library grid */
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px;margin-top:20px}
+.book-card{text-align:center;cursor:pointer;transition:transform 0.15s}
+.book-card:hover{transform:translateY(-2px)}
+.book-card img{width:100%;max-width:140px;height:auto;margin:0 auto 6px;display:block;box-shadow:0 2px 8px rgba(0,0,0,0.2);border-radius:3px}
+.book-card span{font-size:0.8em;line-height:1.3;display:block}
+.placeholder-cover{width:140px;height:222px;margin:0 auto 6px;background:var(--header);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:0.95em;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
 
-    /* Search results */
-    .search-result { padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.1); }
-    .search-result a { color: #b91c1c; font-weight: 600; text-decoration: none; }
-    .search-result a:hover { text-decoration: underline; }
-    .search-result .snippet { font-size: 0.9em; margin-top: 4px; opacity: 0.85; }
-    .search-result .translation { font-weight: 600; margin-top: 4px; }
+/* Chapter index */
+.ch-link{display:block;padding:8px 0;color:var(--link);text-decoration:none;font-weight:500}
+.ch-link:hover{text-decoration:underline}
+.ch-count{opacity:0.5;font-size:0.85em;margin-left:6px}
 
-    /* Verse page */
-    .verse-text { font-style: italic; margin: 16px 0; padding: 12px; background: rgba(218,157,91,0.2); border-radius: 8px; }
-    .synonyms { margin: 16px 0; font-size: 0.95em; }
-    .purport { margin: 16px 0; text-align: justify; }
+/* Verse list (chapter view) */
+.verse-item{padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
+.verse-item a{color:var(--link);font-weight:600;text-decoration:none}
+.verse-item a:hover{text-decoration:underline}
 
-    /* Status */
-    .status { text-align: center; padding: 40px; opacity: 0.6; font-style: italic; }
-    .loading { text-align: center; padding: 40px; }
+/* Verse display */
+.verse-text{text-align:center;font-style:italic;margin:1em 0;white-space:pre-line;line-height:1.8}
+.synonyms{margin:16px 0;font-size:0.95em;line-height:1.6}
+.translation{font-weight:600;font-size:1.05em;margin:16px 0;line-height:1.7}
 
-    /* Dark mode */
-    .dark body { background: #0d0d0d; color: #d4d4d4; }
-    .dark .nav { background: #1a1a1a; }
-    .dark .book-card { background: rgba(42,42,42,0.5); border-color: #333; }
-    .dark .book-card:hover { background: rgba(42,42,42,0.8); }
-    .dark .search-result a { color: #e8b84b; }
-    .dark .nav-search input { background: rgba(26,26,26,0.5); color: #d4d4d4; border-color: #333; }
-    .dark .verse-text { background: rgba(42,42,42,0.5); }
-  </style>
+/* Verse nav pills */
+.verse-nav{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.verse-nav a{display:inline-block;padding:6px 14px;background:var(--header);opacity:0.5;border:1px solid var(--dark);border-radius:5px;text-decoration:none;color:var(--text);font-size:0.85em}
+.verse-nav a:hover{opacity:0.8}
+
+/* Search */
+.search-form{display:flex;gap:8px;margin-bottom:20px}
+.search-form input{flex:1;padding:10px 14px;border:1px solid var(--dark);border-radius:6px;font-size:1em;background:var(--bg);color:var(--text)}
+.search-form button{padding:10px 20px;background:var(--action);color:var(--action-text);border:none;border-radius:6px;cursor:pointer;font-weight:600}
+.search-result{padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
+.search-result a{color:var(--link);font-weight:600;text-decoration:none}
+.search-result a:hover{text-decoration:underline}
+.search-result .trans{font-weight:600;margin-top:4px;font-size:0.95em}
+
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--header);border-top:1px solid var(--dark);padding:8px 16px;z-index:40;justify-content:space-between;align-items:center;gap:8px}
+.bottom-nav.active{display:flex}
+.bottom-nav a{padding:10px 16px;border:1px solid var(--dark);border-radius:6px;background:var(--bg);color:var(--text);text-decoration:none;font-size:0.85em;font-weight:600;white-space:nowrap}
+.bottom-nav a:hover{opacity:0.8}
+.bottom-nav .center{font-size:0.8em;opacity:0.7;text-align:center;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Settings */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.08);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999}
+.overlay.open{display:block}
+.settings{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg);border:2px solid var(--dark);border-radius:12px;padding:20px 24px;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,0.25);width:90vw;max-width:400px}
+.settings.open{display:block}
+.settings h3{margin:0 0 16px;font-size:1.3em;font-family:var(--font-serif)}
+.s-close{position:absolute;top:10px;right:14px;cursor:pointer;background:var(--header);border:1px solid var(--dark);border-radius:6px;padding:6px 14px;font-size:0.9em}
+.s-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--dark)}
+.s-row:last-child{border-bottom:none}
+.toggle{position:relative;width:44px;height:24px;background:var(--dark);border-radius:12px;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.toggle.on{background:var(--action)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle.on::after{transform:translateX(20px)}
+.font-slider{width:100%;cursor:pointer;margin:6px 0}
+
+.loading{text-align:center;padding:40px;opacity:0.6}
+.error{padding:20px;color:red}
+</style>
+<script>try{if(JSON.parse(localStorage.getItem("vbSettings")||"{}").dark)document.documentElement.classList.add("vb-dark")}catch(e){}</script>
 </head>
 <body>
-  <div class="nav">
-    <div class="nav-title" onclick="navigate('library')">Vedabase Original</div>
-    <div class="nav-links">
-      <a href="#" onclick="navigate('library')">Library</a>
-      <a href="#" onclick="navigate('search')">Search</a>
-      <a href="#" onclick="navigate('about')">About</a>
-    </div>
-    <div class="nav-search">
-      <input type="text" id="searchInput" placeholder="Search…" onkeyup="if(event.key==='Enter')doSearch()">
-    </div>
+<div class="hdr">
+  <a class="hdr-title" href="#" onclick="navigate('library')">Vedabase Original</a>
+  <div class="hdr-spacer"></div>
+  <span class="hdr-gear" onclick="toggleSettings()">&#9881;</span>
+</div>
+<div class="nav2">
+  <a href="#" onclick="navigate('library')">Library</a>
+  <a href="#" onclick="navigate('search')">Search</a>
+  <a href="#" onclick="navigate('about')">About</a>
+  <div class="hdr-spacer"></div>
+  <div class="nav2-search">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="4"/><path d="m11 11-2.5-2.5"/></svg>
+    <input type="text" id="navSearch" placeholder="Search…" onkeyup="if(event.key==='Enter'){navigate('search',this.value);this.value=''}">
   </div>
-  <div class="content" id="app">
-    <div class="status">Loading library...</div>
+</div>
+
+<div class="main" id="app"><div class="loading">Loading...</div></div>
+<div class="bottom-nav" id="bottomNav"></div>
+
+<div class="overlay" id="vbOverlay" onclick="toggleSettings()"></div>
+<div class="settings" id="vbSettings">
+  <button class="s-close" onclick="toggleSettings()">ESC &times;</button>
+  <h3>Settings</h3>
+  <div style="padding:12px 0;border-bottom:1px solid var(--dark)"><div>Font size:</div>
+    <input type="range" class="font-slider" min="1" max="9" value="5" id="vbFontSize" oninput="setFont(this.value)">
   </div>
+  <div class="s-row"><div>Dark mode:</div><div class="toggle" id="togDark" onclick="tog('dark')"></div></div>
+  <div class="s-row"><div>Justify text:</div><div class="toggle on" id="togJustify" onclick="tog('justify')"></div></div>
+  <div class="s-row"><div>Serif font:</div><div class="toggle on" id="togSerif" onclick="tog('serif')"></div></div>
+</div>
 
-  <script>
-    // Tauri IPC
-    const { invoke } = window.__TAURI__.core;
+<script>
+// Settings
+function save(k,v){var s=JSON.parse(localStorage.getItem('vbSettings')||'{}');s[k]=v;localStorage.setItem('vbSettings',JSON.stringify(s))}
+function toggleSettings(){document.getElementById('vbSettings').classList.toggle('open');document.getElementById('vbOverlay').classList.toggle('open')}
+function setFont(n){var h=document.documentElement;for(var i=1;i<=9;i++)h.classList.remove('font-size-'+i);h.classList.add('font-size-'+n);var sl=document.getElementById('vbFontSize');if(sl)sl.value=n;save('fontSize',n)}
+function tog(type){var h=document.documentElement;if(type==='dark'){var el=document.getElementById('togDark');el.classList.toggle('on');h.classList.toggle('vb-dark');save('dark',el.classList.contains('on'))}else if(type==='justify'){var el=document.getElementById('togJustify');el.classList.toggle('on');document.body.style.textAlign=el.classList.contains('on')?'':'left';save('justify',el.classList.contains('on'))}else if(type==='serif'){var el=document.getElementById('togSerif');el.classList.toggle('on');h.classList.toggle('sans');save('serif',el.classList.contains('on'))}}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.getElementById('vbSettings').classList.remove('open');document.getElementById('vbOverlay').classList.remove('open')}});
+(function(){var s=JSON.parse(localStorage.getItem('vbSettings')||'{}');if(s.fontSize)setFont(s.fontSize);if(s.dark)tog('dark');if(s.justify===false)tog('justify');if(s.serif===false)tog('serif')})();
 
-    const BOOKS = {
-      bg: 'Bhagavad-gītā As It Is',
-      sb: 'Śrīmad-Bhāgavatam',
-      cc: 'Śrī Caitanya-caritāmṛta',
-      iso: 'Śrī Īśopaniṣad',
-      noi: 'Nectar of Instruction',
-      nod: 'The Nectar of Devotion',
-      kb: 'Kṛṣṇa, the Supreme Personality of Godhead',
-      ssr: 'The Science of Self-Realization',
-      bbd: 'Beyond Birth and Death',
-      tlc: 'Teachings of Lord Caitanya',
-      tlk: 'Teachings of Lord Kapila',
-      tqk: 'Teachings of Queen Kuntī',
-      pop: 'The Path of Perfection',
-      poy: 'The Perfection of Yoga',
-      pqpa: 'Perfect Questions, Perfect Answers',
-      rv: 'Rāja-vidyā',
-      owk: 'On the Way to Kṛṣṇa',
-      lob: 'Light of the Bhāgavata',
-      bs: 'Śrī Brahma-saṁhitā',
-      ejop: 'Easy Journey to Other Planets',
-      ekc: 'Elevation to Kṛṣṇa Consciousness',
-      lcfl: 'Life Comes from Life',
-      rop: 'Kṛṣṇa, the Reservoir of Pleasure',
-      tpm: 'Teachings of Prahlāda Mahārāja',
-      tys: 'The Topmost Yoga System',
-    };
+// Data
+const bookCache={};const verseMap={};let searchIndex=null;
+async function loadBook(slug){if(bookCache[slug])return bookCache[slug];var r=await fetch('books/'+slug+'.json');if(!r.ok)return null;var v=await r.json();bookCache[slug]=v;var m=new Map();v.forEach(x=>m.set(x.ref,x));verseMap[slug]=m;return v}
+async function loadSearchIndex(){if(searchIndex)return searchIndex;var r=await fetch('books/search-index.json');searchIndex=await r.json();return searchIndex}
+function joinLines(s){if(!s)return'';return s.replace(/\n(?!\n)/g,' ').replace(/\n{2,}/g,'</p><p>').trim()}
 
-    let currentLang = 'en';
+function setNav(opts){var n=document.getElementById('bottomNav');if(!opts){n.classList.remove('active');document.body.classList.remove('has-bottom-nav');return}var h='';if(opts.prev)h+='<a href="#" onclick="'+opts.prev.action+'">← '+opts.prev.label+'</a>';else h+='<div></div>';h+='<span class="center">'+(opts.center||'')+'</span>';if(opts.next)h+='<a href="#" onclick="'+opts.next.action+'">'+opts.next.label+' →</a>';else h+='<div></div>';n.innerHTML=h;n.classList.add('active');document.body.classList.add('has-bottom-nav')}
 
-    function navigate(page, params) {
-      const app = document.getElementById('app');
-      if (page === 'library') showLibrary(app);
-      else if (page === 'search') showSearch(app, params);
-      else if (page === 'about') showAbout(app);
-    }
+const COVERS={bg:'en-bg.2e16d0ba.fill-320x508.jpg',sb:'en-sb-1.2e16d0ba.fill-320x508.jpg',cc:'en-cc-adi.2e16d0ba.fill-320x508.jpg',iso:'en-iso.2e16d0ba.fill-320x508.jpg',noi:'en-noi.2e16d0ba.fill-320x508.jpg',nod:'en-nod.2e16d0ba.fill-320x508.jpg',kb:'en-kb.2e16d0ba.fill-320x508.jpg',ssr:'en-ssr.2e16d0ba.fill-320x508.jpg',bbd:'en-bbd.2e16d0ba.fill-320x508.jpg',tlc:'en-tlc.2e16d0ba.fill-320x508.jpg',tlk:'en-tlk.2e16d0ba.fill-320x508.jpg',tqk:'en-tqk.2e16d0ba.fill-320x508.jpg',pop:'en-pop.2e16d0ba.fill-320x508.jpg',poy:'en-poy.2e16d0ba.fill-320x508.jpg',pqpa:'en-pqpa.2e16d0ba.fill-320x508.jpg',rv:'en-rv.2e16d0ba.fill-320x508.jpg',owk:'en-owk.2e16d0ba.fill-320x508.jpg',lob:'en-lob.2e16d0ba.fill-320x508.jpg',bs:'en-bs.2e16d0ba.fill-320x508.jpg',ejop:'en-ejop.2e16d0ba.fill-320x508.jpg',ekc:'en-ekc.2e16d0ba.fill-320x508.jpg',lcfl:'en-lcfl.2e16d0ba.fill-320x508.jpg',rop:'en-rop.2e16d0ba.fill-320x508.jpg',tpm:'en-tpm.2e16d0ba.fill-320x508.jpg',tys:'en-tys.2e16d0ba.fill-320x508.jpg'};
+const ORDER=['bg','sb','cc','noi','kb','nod','iso','ssr','bbd','bs','owk','pop','poy','pqpa','rv','tlc','tlk','tqk','lob','ejop','ekc','lcfl','rop','tpm','tys'];
+const BK={bg:'Bhagavad-gītā As It Is',sb:'Śrīmad-Bhāgavatam',cc:'Śrī Caitanya-caritāmṛta',noi:'Nectar of Instruction',kb:'Kṛṣṇa, the Supreme Personality of Godhead',nod:'The Nectar of Devotion',iso:'Śrī Īśopaniṣad',ssr:'The Science of Self-Realization',bbd:'Beyond Birth and Death',bs:'Śrī Brahma-saṁhitā',owk:'On the Way to Kṛṣṇa',pop:'The Path of Perfection',poy:'The Perfection of Yoga',pqpa:'Perfect Questions, Perfect Answers',rv:'Rāja-vidyā: The King of Knowledge',tlc:'Teachings of Lord Caitanya',tlk:'Teachings of Lord Kapila',tqk:'Teachings of Queen Kuntī',lob:'Light of the Bhāgavata',ejop:'Easy Journey to Other Planets',ekc:'Elevation to Kṛṣṇa Consciousness',lcfl:'Life Comes from Life',rop:'Kṛṣṇa, the Reservoir of Pleasure',tpm:'Transcendental Teachings of Prahlāda Mahārāja',tys:'Kṛṣṇa Consciousness: The Topmost Yoga System',transcripts:'Transcripts',letters:'Letters'};
 
-    function showLibrary(app) {
-      let html = '<h1>Library</h1>';
-      html += '<p>The original unchanged books of Śrīla Prabhupāda.</p>';
-      html += '<div class="library-grid">';
-      for (const [slug, name] of Object.entries(BOOKS)) {
-        html += `<div class="book-card" onclick="searchBook('${slug}')">`;
-        html += `<h3>${name}</h3>`;
-        html += `<p>${slug.toUpperCase()}</p>`;
-        html += '</div>';
-      }
-      html += '</div>';
-      app.innerHTML = html;
-    }
+function navigate(p,a){setNav(null);var app=document.getElementById('app');if(p==='library')showLibrary(app);else if(p==='search')showSearch(app,a);else if(p==='about')showAbout(app)}
 
-    function showSearch(app, query) {
-      let html = '<h1>Search</h1>';
-      html += '<div style="display:flex;gap:8px;margin:16px 0">';
-      html += `<input type="text" id="searchQuery" value="${query || ''}" placeholder="Search the Vedabase..." style="flex:1;padding:12px 16px;border:1px solid #a16207;border-radius:6px;font-size:1em;background:rgba(243,212,165,0.3)">`;
-      html += '<button onclick="doSearch()" style="padding:12px 24px;background:#0f766e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600">Search</button>';
-      html += '</div>';
-      html += '<div id="searchResults"></div>';
-      app.innerHTML = html;
-      if (query) doSearch(query);
-    }
+function showLibrary(app){
+  var h='<h1>Library</h1><div class="lib-grid">';
+  for(var s of ORDER){h+='<div class="book-card" onclick="showBook(\''+s+'\')">';if(COVERS[s])h+='<img src="images/'+COVERS[s]+'" alt="'+BK[s]+'">';h+='<span>'+BK[s]+'</span></div>'}
+  h+='<div class="book-card" onclick="showBook(\'transcripts\')"><div class="placeholder-cover">Transcripts</div><span>Transcripts</span></div>';
+  h+='<div class="book-card" onclick="showBook(\'letters\')"><div class="placeholder-cover">Letters</div><span>Letters</span></div>';
+  h+='</div>';app.innerHTML=h;
+}
 
-    async function doSearch(q) {
-      const query = q || document.getElementById('searchQuery')?.value || document.getElementById('searchInput')?.value;
-      if (!query || query.length < 2) return;
+function showSearch(app,query){
+  var h='<h1 style="font-style:italic">Search</h1><form class="search-form" onsubmit="event.preventDefault();doSearch()"><input type="text" id="searchQuery" value="'+(query||'')+'" placeholder="Search the Vedabase..."><button type="submit">Search</button></form><div id="searchResults"></div>';
+  app.innerHTML=h;if(query)doSearch(query);
+}
 
-      const resultsDiv = document.getElementById('searchResults') || document.getElementById('app');
-      resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
+async function doSearch(q){
+  var query=q||document.getElementById('searchQuery')?.value||document.getElementById('navSearch')?.value;
+  if(!query||query.length<2)return;var div=document.getElementById('searchResults')||document.getElementById('app');
+  div.innerHTML='<div class="loading">Searching...</div>';
+  var idx=await loadSearchIndex();var ql=query.toLowerCase();
+  var res=idx.filter(r=>r.translation&&r.translation.toLowerCase().includes(ql)).slice(0,30);
+  var h='<div style="opacity:0.7;font-style:italic;margin-bottom:12px">'+res.length+' results for "'+query+'"</div>';
+  var esc=query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  for(var r of res){var ref=r.ref.replace(/\//g,'.').toUpperCase();var tr=r.translation.replace(new RegExp('('+esc+')','gi'),'<b>$1</b>');
+    h+='<div class="search-result"><a href="#" onclick="showVerse(\''+r.ref+'\')">'+ref+' — '+(BK[r.book]||r.book)+'</a><div class="trans">'+tr.substring(0,300)+'</div></div>'}
+  if(!res.length)h='<div class="loading">No results found.</div>';div.innerHTML=h;
+}
 
-      try {
-        const response = await invoke('search', { query, lang: currentLang, limit: 30 });
-        let html = `<p style="opacity:0.7;font-style:italic;margin:12px 0">${response.count} results for "${response.query}"</p>`;
+async function showBook(slug){
+  var app=document.getElementById('app');setNav(null);var name=BK[slug]||slug;app.innerHTML='<div class="loading">Loading...</div>';
+  var verses=await loadBook(slug);var refs=verses?verses.map(v=>v.ref):[];
+  var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a></div><h1>'+name+'</h1>';
+  if(!refs.length){h+='<p style="text-align:center;opacity:0.6">No content available.</p>';app.innerHTML=h;return}
+  refs.sort((a,b)=>{var pa=a.replace(slug+'/','').split('/').map(Number),pb=b.replace(slug+'/','').split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++)if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0);return 0});
+  var depth=Math.max(...refs.map(r=>r.replace(slug+'/','').split('/').length));
+  if(depth<=1){for(var r of refs){var n=r.replace(slug+'/','');h+='<a class="ch-link" href="#" onclick="showVerse(\''+r+'\')">Chapter '+n+'</a>'}}
+  else if(depth===2){var chs={};for(var r of refs){var p=r.replace(slug+'/','').split('/');if(!chs[p[0]])chs[p[0]]=0;chs[p[0]]++}for(var c in chs)h+='<a class="ch-link" href="#" onclick="showChapter(\''+slug+'\',\''+c+'\')">Chapter '+c+'<span class="ch-count">('+chs[c]+' verses)</span></a>'}
+  else{var cantos={};for(var r of refs){var p=r.replace(slug+'/','').split('/');if(!cantos[p[0]])cantos[p[0]]=new Set();if(p[1])cantos[p[0]].add(p[1])}var lbl=slug==='cc'?'Section':'Canto';for(var c in cantos)h+='<a class="ch-link" href="#" onclick="showCanto(\''+slug+'\',\''+c+'\')">'+lbl+' '+c+'<span class="ch-count">('+cantos[c].size+' chapters)</span></a>'}
+  app.innerHTML=h;
+}
 
-        for (const r of response.results) {
-          const ref = r.ref.replace(/\//g, '.').toUpperCase();
-          const bookName = BOOKS[r.book] || r.book;
-          html += '<div class="search-result">';
-          html += `<a href="#">${ref} — ${bookName}</a>`;
-          if (r.translation) html += `<div class="translation">${r.translation.substring(0, 250)}${r.translation.length > 250 ? '...' : ''}</div>`;
-          if (r.snippet) html += `<div class="snippet">${r.snippet}</div>`;
-          html += '</div>';
-        }
+async function showCanto(slug,canto){
+  var app=document.getElementById('app');setNav(null);var name=BK[slug]||slug;app.innerHTML='<div class="loading">Loading...</div>';
+  var verses=await loadBook(slug);var refs=verses?verses.map(v=>v.ref):[];var lbl=slug==='cc'?'Section':'Canto';
+  var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a> » <a href="#" onclick="showBook(\''+slug+'\')">'+name+'</a></div><h1>'+lbl+' '+canto+'</h1>';
+  var chs={};for(var r of refs){var p=r.replace(slug+'/','').split('/');if(p[0]===canto&&p[1]){if(!chs[p[1]])chs[p[1]]=0;chs[p[1]]++}}
+  var sorted=Object.keys(chs).sort((a,b)=>(parseInt(a)||0)-(parseInt(b)||0));
+  for(var ch of sorted)h+='<a class="ch-link" href="#" onclick="showChapter(\''+slug+'\',\''+canto+'/'+ch+'\')">Chapter '+ch+'<span class="ch-count">('+chs[ch]+' verses)</span></a>';
+  app.innerHTML=h;
+}
 
-        if (response.count === 0) html = '<div class="status">No results found.</div>';
+async function showChapter(slug,chPath){
+  var app=document.getElementById('app');var name=BK[slug]||slug;app.innerHTML='<div class="loading">Loading...</div>';
+  var all=await loadBook(slug);var refs=all?all.map(v=>v.ref):[];var pre=slug+'/'+chPath+'/';
+  var vr=refs.filter(r=>r.startsWith(pre)).sort((a,b)=>(parseInt(a.split('/').pop())||0)-(parseInt(b.split('/').pop())||0));
+  var pts=chPath.split('/');
+  var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a> » <a href="#" onclick="showBook(\''+slug+'\')">'+name+'</a>';
+  if(pts.length>1)h+=' » <a href="#" onclick="showCanto(\''+slug+'\',\''+pts[0]+'\')">Canto '+pts[0]+'</a>';
+  h+='</div><h1>Chapter '+pts[pts.length-1]+'</h1>';
+  for(var ref of vr){var vn=ref.split('/').pop();var v=all.find(x=>x.ref===ref);if(v){var tr=(v.t||'').replace(/\n/g,' ');h+='<div class="verse-item"><a href="#" onclick="showVerse(\''+ref+'\')">TEXT '+vn+':</a> '+tr+'</div>'}}
+  app.innerHTML=h;window.scrollTo(0,0);
+  // Bottom nav
+  var allCh=[...new Set(refs.filter(r=>r.startsWith(slug+'/')).map(r=>{var p=r.replace(slug+'/','').split('/');return p.length>1?p.slice(0,-1).join('/'):null}).filter(Boolean))].sort((a,b)=>{var pa=a.split('/').map(Number),pb=b.split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++)if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0);return 0});
+  var ci=allCh.indexOf(chPath);
+  setNav({prev:ci>0?{label:'Ch '+allCh[ci-1].split('/').pop(),action:"showChapter('"+slug+"','"+allCh[ci-1]+"')"}:null,center:name,next:ci<allCh.length-1?{label:'Ch '+allCh[ci+1].split('/').pop(),action:"showChapter('"+slug+"','"+allCh[ci+1]+"')"}:null});
+}
 
-        if (document.getElementById('searchResults')) {
-          document.getElementById('searchResults').innerHTML = html;
-        } else {
-          showSearch(document.getElementById('app'), query);
-        }
-      } catch (e) {
-        resultsDiv.innerHTML = `<div class="status">Search error: ${e}</div>`;
-      }
-    }
+async function showVerse(ref){
+  var app=document.getElementById('app');app.innerHTML='<div class="loading">Loading...</div>';
+  var slug=ref.split('/')[0];var verses=await loadBook(slug);var v=verses?verses.find(x=>x.ref===ref):null;
+  if(!v){app.innerHTML='<div class="error">Verse not found</div>';return}
+  var name=BK[slug]||slug;var vn=ref.replace(slug+'/','');var pts=vn.split('/');
+  var isCh=!v.v&&!v.s&&(/^Chapter\s+\d+$/i.test((v.t||'').trim())||pts.length===1);
+  var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a> » <a href="#" onclick="showBook(\''+slug+'\')">'+name+'</a></div>';
+  if(isCh){
+    h+='<h1>'+name+'</h1><p style="text-align:center;font-size:1.2em">Chapter '+pts[0]+'</p>';
+    if(v.p){var pur=v.p.replace(/^Chapter\s+\d+\n/i,'');var lines=pur.split('\n');if(lines[0]&&lines[0].length<60&&/^[A-Z]/.test(lines[0])){h+='<h2 style="text-align:center">'+lines[0]+'</h2>';pur=lines.slice(1).join('\n')}h+='<p>'+joinLines(pur)+'</p>'}
+  } else {
+    h+='<h1>'+name+' '+vn.replace(/\//g,'.')+'</h1>';
+    if(v.v)h+='<div class="verse-text">'+v.v+'</div>';
+    if(v.s)h+='<h2>Synonyms</h2><div class="synonyms">'+v.s.replace(/\n/g,'<br>')+'</div>';
+    if(v.t)h+='<h2>Translation</h2><div class="translation">'+joinLines(v.t)+'</div>';
+    if(v.p)h+='<h2>Purport</h2><p>'+joinLines(v.p)+'</p>';
+  }
+  app.innerHTML=h;window.scrollTo(0,0);
+  var allRefs=verses.map(x=>x.ref);var idx=allRefs.indexOf(ref);
+  setNav({prev:idx>0?{label:'Prev',action:"showVerse('"+allRefs[idx-1]+"')"}:null,center:name,next:idx<allRefs.length-1?{label:'Next',action:"showVerse('"+allRefs[idx+1]+"')"}:null});
+}
 
-    function searchBook(slug) {
-      showSearch(document.getElementById('app'));
-      // Could filter by book in future
-    }
+function showAbout(app){
+  app.innerHTML='<h1>About This Edition</h1>'+
+  '<p>This library contains the original, unedited works of His Divine Grace A.C. Bhaktivedanta Swami Prabhupāda.</p>'+
+  '<p>Every word checked against scans of the original printed editions.</p>'+
+  '<h2>Verified Against Original Editions</h2>'+
+  '<p>After Śrīla Prabhupāda\'s departure in 1977, his books underwent editorial revisions. Thousands of changes were introduced — from minor punctuation to significant alterations that affect philosophical meaning.</p>'+
+  '<p>The texts in this library have been <strong>verified against the original printed editions</strong> by cross-referencing with scanned copies of the books as Śrīla Prabhupāda personally approved and published them.</p>'+
+  '<p style="opacity:0.6;text-align:center;font-style:italic;margin-top:32px">This project is a humble offering to Śrīla Prabhupāda and all sincere seekers of his original message.</p>';
+}
 
-    function showAbout(app) {
-      app.innerHTML = `
-        <h1>About This Edition</h1>
-        <p>This library contains the original, unedited works of His Divine Grace A.C. Bhaktivedanta Swami Prabhupāda.</p>
-        <h2 style="margin-top:24px">Verified Against Original Editions</h2>
-        <p>After Śrīla Prabhupāda's departure in 1977, his books underwent editorial revisions. Thousands of changes were introduced — from minor punctuation to significant alterations that affect philosophical meaning.</p>
-        <p>The texts in this library have been <strong>verified against the original printed editions</strong> by cross-referencing with scanned copies of the books as Śrīla Prabhupāda personally approved and published them.</p>
-        <p style="margin-top:24px;opacity:0.6;text-align:center;font-style:italic">This project is a humble offering to Śrīla Prabhupāda and all sincere seekers of his original message.</p>
-      `;
-    }
-
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-      // Apply dark mode from localStorage
-      try {
-        const s = JSON.parse(localStorage.getItem('vbSettings') || '{}');
-        if (s.dark) document.documentElement.classList.add('dark');
-      } catch(e) {}
-
-      navigate('library');
-    });
-  </script>
-</body>
+navigate('library');
+</script>
 </html>

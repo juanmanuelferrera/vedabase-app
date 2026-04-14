@@ -1,3 +1,6 @@
 target/
 node_modules/
-src-tauri/resources/vedabase.db
+src-tauri/resources/
+dist/books/
+dist/images/
+package-lock.json

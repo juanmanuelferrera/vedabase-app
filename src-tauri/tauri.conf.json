@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "identifier": "site.vedabase.app",
   "build": {
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:3000"
+    "frontendDist": "../dist"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "title": "Vedabase Original — The original unchanged books of Śrīla Prabhupāda",
@@ -32,9 +32,6 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ],
-    "resources": [
-      "resources/*"
     ]
   }
 }
