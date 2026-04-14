@@ -70,7 +70,8 @@ p{margin-bottom:16px;line-height:1.7;text-align:justify}
 .search-result{padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
 .search-result a{color:var(--link);font-weight:600;text-decoration:none}
 .search-result a:hover{text-decoration:underline}
-.search-result .trans{font-weight:600;margin-top:4px;font-size:0.95em}
+.search-result .trans{margin-top:4px;font-size:0.95em}
+.search-result b,.hl{background:#e8b84b;color:#1a1a1a;padding:1px 2px;border-radius:2px}
 
 /* Bottom nav */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--header);border-top:1px solid var(--dark);padding:8px 16px;z-index:40;justify-content:space-between;align-items:center;gap:8px}
@@ -94,6 +95,9 @@ p{margin-bottom:16px;line-height:1.7;text-align:justify}
 .toggle.on::after{transform:translateX(20px)}
 .font-slider{width:100%;cursor:pointer;margin:6px 0}
 
+.pill{display:inline-block;padding:5px 12px;border:1px solid var(--dark);border-radius:16px;text-decoration:none;color:var(--text);font-size:0.8em;background:none;opacity:0.6}
+.pill:hover{opacity:0.9}
+.pill.active{background:var(--header);opacity:1;font-weight:600}
 .loading{text-align:center;padding:40px;opacity:0.6}
 .error{padding:20px;color:red}
 </style>
@@ -146,7 +150,7 @@ async function loadBook(slug){if(bookCache[slug])return bookCache[slug];var r=aw
   v.sort(function(a,b){var pa=a.ref.replace(slug+'/','').split('/').map(Number),pb=b.ref.replace(slug+'/','').split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++){if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0)}return 0});
   bookCache[slug]=v;var m=new Map();v.forEach(x=>m.set(x.ref,x));verseMap[slug]=m;return v}
 async function loadSearchIndex(){if(searchIndex)return searchIndex;var r=await fetch('books/search-index.json');searchIndex=await r.json();return searchIndex}
-function joinLines(s){if(!s)return'';return s.replace(/\n(?!\n)/g,' ').replace(/\n{2,}/g,'</p><p>').trim()}
+function joinLines(s){if(!s)return'';return s.replace(/\n\n+/g,'</p><p>').replace(/\n/g,' ').trim()}
 
 function setNav(opts){var n=document.getElementById('bottomNav');if(!opts){n.classList.remove('active');document.body.classList.remove('has-bottom-nav');return}var h='';if(opts.prev)h+='<a href="#" onclick="'+opts.prev.action+'">← '+opts.prev.label+'</a>';else h+='<div></div>';h+='<span class="center">'+(opts.center||'')+'</span>';if(opts.next)h+='<a href="#" onclick="'+opts.next.action+'">'+opts.next.label+' →</a>';else h+='<div></div>';n.innerHTML=h;n.classList.add('active');document.body.classList.add('has-bottom-nav')}
 
@@ -165,7 +169,10 @@ function showLibrary(app){
 }
 
 function showSearch(app,query){
-  var h='<h1 style="font-style:italic">Search</h1><form class="search-form" onsubmit="event.preventDefault();doSearch()"><input type="text" id="searchQuery" value="'+(query||'')+'" placeholder="Search the Vedabase..."><button type="submit">Search</button></form><div id="searchResults"></div>';
+  var h='<h1 style="font-style:italic">Search</h1><form class="search-form" onsubmit="event.preventDefault();doSearch()"><input type="text" id="searchQuery" value="'+(query||'')+'" placeholder="Search the Vedabase..."><button type="submit">Search</button></form>';
+  h+='<div id="searchFilters" style="display:none;margin-bottom:16px"><div style="margin-bottom:8px;font-size:0.85em;opacity:0.7">Filter by:</div>';
+  h+='<div style="display:flex;flex-wrap:wrap;gap:6px" id="filterPills"></div></div>';
+  h+='<div id="searchResults"></div>';
   app.innerHTML=h;if(query)doSearch(query);
 }
 
@@ -174,23 +181,49 @@ async function doSearch(q){
   if(!query||query.length<2)return;var div=document.getElementById('searchResults')||document.getElementById('app');
   div.innerHTML='<div class="loading">Searching...</div>';
   var ql=query.toLowerCase();var esc=query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');var re=new RegExp('('+esc+')','gi');
-  var res=[];
-  // Search across all loaded + unloaded books
+  var allRes=[];var bookCounts={};
+  // Search across all books
   for(var slug of ORDER.concat(['transcripts','letters'])){
     var verses=await loadBook(slug);if(!verses)continue;
     for(var v of verses){
-      var match='';
-      if(v.t&&v.t.toLowerCase().includes(ql))match=v.t;
-      else if(v.p&&v.p.toLowerCase().includes(ql)){var pi=v.p.toLowerCase().indexOf(ql);match=v.p.substring(Math.max(0,pi-80),pi+200)}
-      else if(v.s&&v.s.toLowerCase().includes(ql))match=v.s;
-      if(match){res.push({ref:v.ref,book:slug,text:match});if(res.length>=50)break}
+      var match='',type='';
+      if(v.t&&v.t.toLowerCase().includes(ql)){match=v.t;type='translation'}
+      else if(v.p&&v.p.toLowerCase().includes(ql)){var pi=v.p.toLowerCase().indexOf(ql);match=v.p.substring(Math.max(0,pi-80),pi+200);type='purport'}
+      else if(v.s&&v.s.toLowerCase().includes(ql)){match=v.s;type='synonyms'}
+      if(match){allRes.push({ref:v.ref,book:slug,text:match,type:type});bookCounts[slug]=(bookCounts[slug]||0)+1}
     }
-    if(res.length>=50)break;
   }
+  // Store for filtering
+  window._searchResults=allRes;window._searchQuery=query;
+  // Build filter pills
+  var pills=document.getElementById('filterPills');var filters=document.getElementById('searchFilters');
+  if(allRes.length>0){
+    filters.style.display='block';
+    var ph='<a href="#" onclick="filterSearch(\'all\')" class="pill active" id="pill-all">All ('+allRes.length+')</a>';
+    var sorted=Object.entries(bookCounts).sort((a,b)=>b[1]-a[1]);
+    for(var [bk,cnt] of sorted)ph+='<a href="#" onclick="filterSearch(\''+bk+'\')" class="pill" id="pill-'+bk+'">'+(BK[bk]||bk)+' ('+cnt+')</a>';
+    pills.innerHTML=ph;
+  } else {filters.style.display='none'}
+  renderSearchResults(allRes,query);
+}
+
+function filterSearch(book){
+  var res=window._searchResults||[];var query=window._searchQuery||'';
+  if(book!=='all')res=res.filter(r=>r.book===book);
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  var el=document.getElementById('pill-'+book);if(el)el.classList.add('active');
+  renderSearchResults(res,query);
+}
+
+function renderSearchResults(res,query){
+  var div=document.getElementById('searchResults');
+  var esc=query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');var re=new RegExp('('+esc+')','gi');
+  var shown=res.slice(0,50);
   var h='<div style="opacity:0.7;font-style:italic;margin-bottom:12px">'+res.length+' results for "'+query+'"</div>';
-  for(var r of res){var ref=r.ref.replace(/\//g,'.').toUpperCase();var snippet=r.text.replace(/\n/g,' ').substring(0,300).replace(re,'<b>$1</b>');
-    h+='<div class="search-result"><a href="#" onclick="showVerse(\''+r.ref+'\')">'+ref+' — '+(BK[r.book]||r.book)+'</a><div class="trans">'+snippet+'</div></div>'}
-  if(!res.length)h='<div class="loading">No results found.</div>';div.innerHTML=h;
+  for(var r of shown){var ref=r.ref.replace(/\//g,'.').toUpperCase();var snippet=r.text.replace(/\n/g,' ').substring(0,300).replace(re,'<b>$1</b>');
+    h+='<div class="search-result"><a href="#" onclick="showVerse(\''+r.ref+'\',\''+query.replace(/'/g,"\\'")+'\')">'+ref+' — '+(BK[r.book]||r.book)+'</a><div class="trans">'+snippet+'</div></div>'}
+  if(!res.length)h='<div class="loading">No results found.</div>';
+  div.innerHTML=h;
 }
 
 async function showBook(slug){
@@ -200,7 +233,7 @@ async function showBook(slug){
   if(!refs.length){h+='<p style="text-align:center;opacity:0.6">No content available.</p>';app.innerHTML=h;return}
   refs.sort((a,b)=>{var pa=a.replace(slug+'/','').split('/').map(Number),pb=b.replace(slug+'/','').split('/').map(Number);for(var i=0;i<Math.max(pa.length,pb.length);i++)if((pa[i]||0)!==(pb[i]||0))return(pa[i]||0)-(pb[i]||0);return 0});
   var depth=Math.max(...refs.map(r=>r.replace(slug+'/','').split('/').length));
-  if(depth<=1){for(var r of refs){var n=r.replace(slug+'/','');h+='<a class="ch-link" href="#" onclick="showVerse(\''+r+'\')">Chapter '+n+'</a>'}}
+  if(depth<=1){for(var r of refs){var n=r.replace(slug+'/','');var v=verses.find(x=>x.ref===r);var label=(v&&v.t&&!(/^Chapter\s+\d+$/i.test(v.t.trim())))?v.t.replace(/\n.*/,''):((slug==='letters'||slug==='transcripts')?n.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()):'Chapter '+n);h+='<a class="ch-link" href="#" onclick="showVerse(\''+r+'\')">'+label+'</a>'}}
   else if(depth===2){var chs={};for(var r of refs){var p=r.replace(slug+'/','').split('/');if(!chs[p[0]])chs[p[0]]=0;chs[p[0]]++}for(var c in chs)h+='<a class="ch-link" href="#" onclick="showChapter(\''+slug+'\',\''+c+'\')">Chapter '+c+'<span class="ch-count">('+chs[c]+' verses)</span></a>'}
   else{var cantos={};for(var r of refs){var p=r.replace(slug+'/','').split('/');if(!cantos[p[0]])cantos[p[0]]=new Set();if(p[1])cantos[p[0]].add(p[1])}var lbl=slug==='cc'?'Section':'Canto';for(var c in cantos)h+='<a class="ch-link" href="#" onclick="showCanto(\''+slug+'\',\''+c+'\')">'+lbl+' '+c+'<span class="ch-count">('+cantos[c].size+' chapters)</span></a>'}
   app.innerHTML=h;
@@ -232,16 +265,36 @@ async function showChapter(slug,chPath){
   setNav({prev:ci>0?{label:'Ch '+allCh[ci-1].split('/').pop(),action:"showChapter('"+slug+"','"+allCh[ci-1]+"')"}:null,center:name,next:ci<allCh.length-1?{label:'Ch '+allCh[ci+1].split('/').pop(),action:"showChapter('"+slug+"','"+allCh[ci+1]+"')"}:null});
 }
 
-async function showVerse(ref){
+async function showVerse(ref,highlight){
   var app=document.getElementById('app');app.innerHTML='<div class="loading">Loading...</div>';
   var slug=ref.split('/')[0];var verses=await loadBook(slug);var v=verses?verses.find(x=>x.ref===ref):null;
   if(!v){app.innerHTML='<div class="error">Verse not found</div>';return}
   var name=BK[slug]||slug;var vn=ref.replace(slug+'/','');var pts=vn.split('/');
-  var isCh=!v.v&&!v.s&&/^Chapter\s+\d+$/i.test((v.t||'').trim());
+  var isLetter=(slug==='letters'||slug==='transcripts');
+  var isCh=!isLetter&&!v.v&&!v.s&&/^Chapter\s+\d+$/i.test((v.t||'').trim());
   var h='<div class="breadcrumb"><a href="#" onclick="navigate(\'library\')">Library</a> » <a href="#" onclick="showBook(\''+slug+'\')">'+name+'</a></div>';
   if(isCh){
     h+='<h1>'+name+'</h1><p style="text-align:center;font-size:1.2em">Chapter '+pts[0]+'</p>';
     if(v.p){var pur=v.p.replace(/^Chapter\s+\d+\n/i,'');var lines=pur.split('\n');if(lines[0]&&lines[0].length<60&&/^[A-Z]/.test(lines[0])){h+='<h2 style="text-align:center">'+lines[0]+'</h2>';pur=lines.slice(1).join('\n')}h+='<p>'+joinLines(pur)+'</p>'}
+  } else if(isLetter){
+    var title=(v.t||'').replace(/\n.*/,'');
+    h+='<h1 style="font-size:1.5em">'+title+'</h1>';
+    if(v.p){var content=v.p;
+      // Parse letter header: extract date, location, skip duplicate metadata
+      var lines=content.split('\n');var bodyStart=0;var date='',location='';
+      for(var li=0;li<Math.min(lines.length,20);li++){
+        var ln=lines[li].trim();
+        if(ln.startsWith('Dated:'))date=ln.replace('Dated:','').trim();
+        else if(ln.startsWith('Location:'))location=ln.replace('Location:','').trim();
+        else if(ln.match(/^(My dear|Dear |Please accept)/)){bodyStart=li;break}
+        else if(ln.match(/^\d{2}-\d{2}-\d{2}$/)){continue}
+        else if(li>0&&ln.match(/^[A-Z][a-z]/)&&lines[li-1]&&lines[li-1].match(/Letter to:|Sriman|Srimati|Sri /)){continue}
+      }
+      if(!bodyStart)for(var li=0;li<lines.length;li++){if(lines[li].trim().length>80){bodyStart=li;break}}
+      if(date||location)h+='<p style="text-align:center;opacity:0.7;font-size:0.95em;margin-bottom:16px">'+date+(location?' — '+location:'')+'</p>';
+      // Render body with proper paragraphs
+      var body=lines.slice(bodyStart).join('\n');
+      h+='<p>'+body.replace(/\n\n+/g,'</p><p>').replace(/\n/g,'<br>')+'</p>'}
   } else {
     var vnLabel=vn.replace(/\//g,'.');var isSingleLevel=pts.length===1;
     if(isSingleLevel&&(slug==='iso'))vnLabel='Mantra '+vn;
@@ -253,7 +306,9 @@ async function showVerse(ref){
     if(v.t)h+='<h2>Translation</h2><div class="translation">'+joinLines(v.t)+'</div>';
     if(v.p)h+='<h2>Purport</h2><p>'+joinLines(v.p)+'</p>';
   }
-  app.innerHTML=h;window.scrollTo(0,0);
+  app.innerHTML=h;
+  if(highlight){var esc=highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');var re=new RegExp('('+esc+')','gi');app.querySelectorAll('.synonyms,.translation,p').forEach(function(el){el.innerHTML=el.innerHTML.replace(re,'<b class="hl">$1</b>')})}
+  window.scrollTo(0,0);
   var allRefs=verses.map(x=>x.ref);var idx=allRefs.indexOf(ref);
   setNav({prev:idx>0?{label:'Prev',action:"showVerse('"+allRefs[idx-1]+"')"}:null,center:name,next:idx<allRefs.length-1?{label:'Next',action:"showVerse('"+allRefs[idx+1]+"')"}:null});
 }
