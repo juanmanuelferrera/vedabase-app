@@ -1,5 +1,7 @@
 # Vedabase - Original
 
+> ⚠️ **Legacy.** This repository is no longer maintained. The current app is served at **https://app.vedabase.cc**.
+
 A desktop and web application for reading and studying the complete works of A. C. Bhaktivedanta Swami Prabhupada — original, unedited editions as originally published.
 
 **[Use Online](https://vedabase-app.pages.dev/app)** · **[Download Desktop App](https://github.com/juanmanuelferrera/vedabase-app/releases/latest)** · **[Landing Page](https://vedabase-app.pages.dev/)**
